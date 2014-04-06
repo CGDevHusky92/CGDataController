@@ -16,6 +16,8 @@
 		2E19ED5418E77C5600CB749E /* CGDataControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E19ED5318E77C5600CB749E /* CGDataControllerTests.m */; };
 		2E19ED5F18E77CA600CB749E /* CGDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E19ED5E18E77CA600CB749E /* CGDataController.m */; };
 		2E19ED6118E77CB900CB749E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E19ED6018E77CB900CB749E /* CoreData.framework */; };
+		2E322AE918F208040005CF17 /* CGDataController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E19ED5D18E77CA600CB749E /* CGDataController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E322AEA18F208040005CF17 /* NSManagedObject+SYNC.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E6FBACD18EA092A008AA837 /* NSManagedObject+SYNC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E6FBACF18EA092A008AA837 /* NSManagedObject+SYNC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6FBACE18EA092A008AA837 /* NSManagedObject+SYNC.m */; };
 /* End PBXBuildFile section */
 
@@ -152,6 +154,18 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		2E322AE618F207C90005CF17 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E322AE918F208040005CF17 /* CGDataController.h in Headers */,
+				2E322AEA18F208040005CF17 /* NSManagedObject+SYNC.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		2E19ED3318E77C5600CB749E /* CGDataController */ = {
 			isa = PBXNativeTarget;
@@ -160,6 +174,7 @@
 				2E19ED3018E77C5600CB749E /* Sources */,
 				2E19ED3118E77C5600CB749E /* Frameworks */,
 				2E19ED3218E77C5600CB749E /* CopyFiles */,
+				2E322AE618F207C90005CF17 /* Headers */,
 			);
 			buildRules = (
 			);
