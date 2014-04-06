@@ -16,6 +16,7 @@
 		2E19ED5418E77C5600CB749E /* CGDataControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E19ED5318E77C5600CB749E /* CGDataControllerTests.m */; };
 		2E19ED5F18E77CA600CB749E /* CGDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E19ED5E18E77CA600CB749E /* CGDataController.m */; };
 		2E19ED6118E77CB900CB749E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E19ED6018E77CB900CB749E /* CoreData.framework */; };
+		2E6FBACF18EA092A008AA837 /* NSManagedObject+SYNC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6FBACE18EA092A008AA837 /* NSManagedObject+SYNC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		2E19ED5D18E77CA600CB749E /* CGDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGDataController.h; sourceTree = "<group>"; };
 		2E19ED5E18E77CA600CB749E /* CGDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGDataController.m; sourceTree = "<group>"; };
 		2E19ED6018E77CB900CB749E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		2E6FBACD18EA092A008AA837 /* NSManagedObject+SYNC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+SYNC.h"; sourceTree = "<group>"; };
+		2E6FBACE18EA092A008AA837 /* NSManagedObject+SYNC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+SYNC.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +117,8 @@
 			children = (
 				2E19ED5D18E77CA600CB749E /* CGDataController.h */,
 				2E19ED5E18E77CA600CB749E /* CGDataController.m */,
+				2E6FBACD18EA092A008AA837 /* NSManagedObject+SYNC.h */,
+				2E6FBACE18EA092A008AA837 /* NSManagedObject+SYNC.m */,
 				2E19ED3A18E77C5600CB749E /* Supporting Files */,
 			);
 			path = CGDataController;
@@ -226,6 +231,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E6FBACF18EA092A008AA837 /* NSManagedObject+SYNC.m in Sources */,
 				2E19ED5F18E77CA600CB749E /* CGDataController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,6 +413,7 @@
 				2E19ED5918E77C5600CB749E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2E19ED5A18E77C5600CB749E /* Build configuration list for PBXNativeTarget "CGDataControllerTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +422,7 @@
 				2E19ED5C18E77C5600CB749E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

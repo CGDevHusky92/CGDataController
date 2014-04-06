@@ -31,14 +31,14 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-+ (id)sharedData
++ (instancetype)sharedData
 {
     static dispatch_once_t once;
-    static CGDataController *sharedInstance;
+    static CGDataController *sharedData;
     dispatch_once(&once, ^{
-        sharedInstance = [[self alloc] init];
+        sharedData = [[self alloc] init];
     });
-    return sharedInstance;
+    return sharedData;
 }
 
 #pragma mark - Core Data stack

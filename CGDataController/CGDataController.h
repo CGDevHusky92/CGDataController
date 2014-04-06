@@ -10,9 +10,16 @@
 #import <CoreData/CoreData.h>
 #import <Foundation/Foundation.h>
 
+typedef enum CGSyncStatus
+{
+    kCGSyncStable = 1,
+    kCGSyncPending,
+    kCGSyncSyncing
+} CGSyncStatus;
+
 @interface CGDataController : NSObject
 
-+ (id)sharedData;
++ (instancetype)sharedData;
 - (NSManagedObjectContext *)backgroundManagedObjectContext;
 
 - (void)saveMasterContext;
