@@ -197,6 +197,12 @@
 
 #pragma mark - Requests For Specific Object
 
+- (BOOL)objectExistsOnDisk:(NSString *)objId
+{
+#warning Implement
+    return NO;
+}
+
 - (NSManagedObject *)newManagedObjectForClass:(NSString *)className
 {
     NSManagedObjectContext *context = [self backgroundManagedObjectContext];
