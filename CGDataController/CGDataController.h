@@ -19,6 +19,7 @@ typedef enum CGSyncStatus
 
 @interface CGDataController : NSObject
 
++ (instancetype)initSharedDataWithStoreName:(NSString *)name;
 + (instancetype)sharedData;
 - (NSManagedObjectContext *)backgroundManagedObjectContext;
 

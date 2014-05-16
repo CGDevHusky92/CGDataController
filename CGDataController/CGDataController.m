@@ -16,6 +16,10 @@
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+@property (strong, nonatomic) NSString *storeName;
+
+- (instancetype)initWithStoreName:(NSString *)name;
+
 - (NSManagedObjectContext *)masterManagedObjectContext;
 - (NSManagedObjectContext *)newManagedObjectContext;
 - (NSManagedObjectModel *)managedObjectModel;
@@ -31,14 +35,32 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+static dispatch_once_t once;
+static CGDataController *sharedData;
+
++ (instancetype)initSharedDataWithStoreName:(NSString *)name
+{
+    dispatch_once(&once, ^{
+        sharedData = [[self alloc] initWithStoreName:name];
+    });
+    return sharedData;
+}
+
 + (instancetype)sharedData
 {
-    static dispatch_once_t once;
-    static CGDataController *sharedData;
     dispatch_once(&once, ^{
         sharedData = [[self alloc] init];
     });
     return sharedData;
+}
+
+- (instancetype)initWithStoreName:(NSString *)name
+{
+    self = [super init];
+    if (self) {
+        _storeName = name;
+    }
+    return self;
 }
 
 #pragma mark - Core Data stack
@@ -125,15 +147,18 @@
         return _managedObjectModel;
     }
     
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ThisOrThat" withExtension:@"mom"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"mom"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     
+    // ThisOrThat Hack
+#ifdef THISORTHAT_HACK
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (![defaults objectForKey:@"ModelUpdate1.2.0"] || ![[defaults objectForKey:@"ModelUpdate1.2.0"] boolValue]) {
         [defaults setObject:[NSNumber numberWithBool:YES] forKey:@"ModelUpdate1.2.0"];
         [defaults synchronize];
         [self deleteStore];
     }
+#endif
     
     return _managedObjectModel;
 }
@@ -146,7 +171,7 @@
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"ThisOrThat.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", _storeName]];
     
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
@@ -178,7 +203,7 @@
 - (void)deleteStore
 {
     NSError *error;
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"ThisOrThat.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", _storeName]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
