@@ -139,6 +139,14 @@ static CGDataController *sharedData;
     }];
 }
 
+- (void)performFullSaveOnMainThread
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self saveBackgroundContext];
+        [self saveMasterContext];
+    });
+}
+
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
 - (NSManagedObjectModel *)managedObjectModel
@@ -147,7 +155,7 @@ static CGDataController *sharedData;
         return _managedObjectModel;
     }
     
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"mom"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     
     // ThisOrThat Hack
@@ -177,10 +185,15 @@ static CGDataController *sharedData;
                              [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
                              [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
     
-    NSError *error = nil;
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
-        NSLog(@"Error: %@ - %@", error, [error userInfo]);
+    NSManagedObjectModel *model = [self managedObjectModel];
+    if (model) {
+        NSError *error = nil;
+        _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+        if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
+            NSLog(@"Error: %@ - %@", error, [error userInfo]);
+        }
+    } else {
+        NSLog(@"Error: ManagedObjectModel is nil");
     }
     
     return _persistentStoreCoordinator;
@@ -202,7 +215,6 @@ static CGDataController *sharedData;
 
 - (void)deleteStore
 {
-    NSError *error;
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", _storeName]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
@@ -212,12 +224,8 @@ static CGDataController *sharedData;
         }
     }
     
-    //Make new persistent store for future saves
     _persistentStoreCoordinator = nil;
-    if (![self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        // do something with the error
-        NSLog(@"Error: %@", [error localizedDescription]);
-    }
+    [self persistentStoreCoordinator];
 }
 
 #pragma mark - Requests For Specific Object

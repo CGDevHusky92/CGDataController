@@ -25,6 +25,7 @@ typedef enum CGSyncStatus
 
 - (void)saveMasterContext;
 - (void)saveBackgroundContext;
+- (void)performFullSaveOnMainThread;
 
 - (void)resetStore;
 - (void)deleteStore;
