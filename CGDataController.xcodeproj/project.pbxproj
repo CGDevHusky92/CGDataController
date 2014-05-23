@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		2EA0E0A1192D7A3900A24B35 /* CGDataControllerUniversal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2EA0E0A4192D7A3900A24B35 /* Build configuration list for PBXAggregateTarget "CGDataControllerUniversal" */;
+			buildPhases = (
+				2EA0E0A5192D7A4000A24B35 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = CGDataControllerUniversal;
+			productName = CGDataControllerUniversal;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		2E19ED3818E77C5600CB749E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E19ED3718E77C5600CB749E /* Foundation.framework */; };
 		2E19ED4618E77C5600CB749E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E19ED4518E77C5600CB749E /* XCTest.framework */; };
@@ -16,8 +30,8 @@
 		2E19ED5418E77C5600CB749E /* CGDataControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E19ED5318E77C5600CB749E /* CGDataControllerTests.m */; };
 		2E19ED5F18E77CA600CB749E /* CGDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E19ED5E18E77CA600CB749E /* CGDataController.m */; };
 		2E19ED6118E77CB900CB749E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E19ED6018E77CB900CB749E /* CoreData.framework */; };
-		2E322AE918F208040005CF17 /* CGDataController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E19ED5D18E77CA600CB749E /* CGDataController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2E322AEA18F208040005CF17 /* NSManagedObject+SYNC.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E6FBACD18EA092A008AA837 /* NSManagedObject+SYNC.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E322AE918F208040005CF17 /* CGDataController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E19ED5D18E77CA600CB749E /* CGDataController.h */; };
+		2E322AEA18F208040005CF17 /* NSManagedObject+SYNC.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E6FBACD18EA092A008AA837 /* NSManagedObject+SYNC.h */; };
 		2E6FBACF18EA092A008AA837 /* NSManagedObject+SYNC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6FBACE18EA092A008AA837 /* NSManagedObject+SYNC.m */; };
 /* End PBXBuildFile section */
 
@@ -226,6 +240,7 @@
 			targets = (
 				2E19ED3318E77C5600CB749E /* CGDataController */,
 				2E19ED4318E77C5600CB749E /* CGDataControllerTests */,
+				2EA0E0A1192D7A3900A24B35 /* CGDataControllerUniversal */,
 			);
 		};
 /* End PBXProject section */
@@ -240,6 +255,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2EA0E0A5192D7A4000A24B35 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LIB_TARGET_NAME=\"CGDataController\"\n\nif [ \"${ACTION}\" = \"clean\" ]\nthen\necho \"Cleaning Libraries...\"\ncd \"${PROJECT_DIR}\"\nxcodebuild -target \"$LIB_TARGET_NAME\" -configuration ${CONFIGURATION} -sdk iphoneos clean\nxcodebuild -target \"$LIB_TARGET_NAME\" -configuration ${CONFIGURATION} -sdk iphonesimulator clean\nfi\n\nif [ \"${ACTION}\" = \"build\" ]\nthen\necho \"Building Libraries\"\ncd \"${PROJECT_DIR}\"\nxcodebuild -target \"$LIB_TARGET_NAME\" -configuration ${CONFIGURATION} -sdk iphoneos\nxcodebuild -target \"$LIB_TARGET_NAME\" -configuration ${CONFIGURATION} -sdk iphonesimulator\n\n# Check that this is what your static libraries are called\nARM_FILES=\"${PROJECT_DIR}/build/${CONFIGURATION}-iphoneos/lib${LIB_TARGET_NAME}.a\"\nI386_FILES=\"${PROJECT_DIR}/build/${CONFIGURATION}-iphonesimulator/lib${LIB_TARGET_NAME}.a\"\n\necho \"Creating library...\"\nlipo -create \"$ARM_FILES\" \"$I386_FILES\" -o \"${PROJECT_DIR}/build/${CONFIGURATION}-iphoneos/lib${PRODUCT_NAME}.a\"\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2E19ED3018E77C5600CB749E /* Sources */ = {
@@ -315,6 +346,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -345,6 +377,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -355,6 +388,7 @@
 				DSTROOT = /tmp/CGDataController.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CGDataController/CGDataController-Prefix.pch";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -367,6 +401,7 @@
 				DSTROOT = /tmp/CGDataController.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CGDataController/CGDataController-Prefix.pch";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -409,6 +444,20 @@
 			};
 			name = Release;
 		};
+		2EA0E0A2192D7A3900A24B35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2EA0E0A3192D7A3900A24B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -438,6 +487,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		2EA0E0A4192D7A3900A24B35 /* Build configuration list for PBXAggregateTarget "CGDataControllerUniversal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EA0E0A2192D7A3900A24B35 /* Debug */,
+				2EA0E0A3192D7A3900A24B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
