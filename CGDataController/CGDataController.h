@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import <Foundation/Foundation.h>
 
+#import "NSManagedObject+SYNC.h"
+
 typedef enum CGSyncStatus
 {
     kCGSyncStable = 1,
