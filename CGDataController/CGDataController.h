@@ -25,12 +25,17 @@ typedef enum CGSyncStatus
 + (instancetype)sharedData;
 - (NSManagedObjectContext *)backgroundManagedObjectContext;
 
+/* Context Saves */
 - (void)saveMasterContext;
 - (void)saveBackgroundContext;
 - (void)performFullSaveOnMainThread;
 
+/* Storage Delete and Resets */
 - (void)resetStore;
 - (void)deleteStore;
+
+/* Unique ID Generation */
+- (NSString *)generateUniqueID;
 
 /* Fetch Object */
 - (NSManagedObject *)newManagedObjectForClass:(NSString *)className;

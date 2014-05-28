@@ -228,6 +228,14 @@ static CGDataController *sharedData;
     [self persistentStoreCoordinator];
 }
 
+#pragma mark - Unique ID Generation Implementation
+
+- (NSString *)generateUniqueID
+{
+#warning Implement
+    return nil;
+}
+
 #pragma mark - Requests For Specific Object
 
 - (BOOL)objectExistsOnDisk:(NSString *)objId
