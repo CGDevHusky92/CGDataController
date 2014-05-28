@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E03C678193697BE005DC84A /* NSSyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03C677193697BE005DC84A /* NSSyncTests.m */; };
 		2ED05C30193538510082B792 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C2F193538510082B792 /* Foundation.framework */; };
 		2ED05C35193538510082B792 /* CGDataController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2ED05C34193538510082B792 /* CGDataController.h */; };
 		2ED05C37193538510082B792 /* CGDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED05C36193538510082B792 /* CGDataController.m */; };
@@ -15,7 +16,7 @@
 		2ED05C41193538510082B792 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C40193538510082B792 /* UIKit.framework */; };
 		2ED05C44193538510082B792 /* libCGDataController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C2C193538510082B792 /* libCGDataController.a */; };
 		2ED05C4A193538510082B792 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ED05C48193538510082B792 /* InfoPlist.strings */; };
-		2ED05C4C193538510082B792 /* CGDataControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED05C4B193538510082B792 /* CGDataControllerTests.m */; };
+		2ED05C4C193538510082B792 /* CGDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED05C4B193538510082B792 /* CGDataTests.m */; };
 		2ED05C57193539270082B792 /* NSManagedObject+SYNC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED05C56193539270082B792 /* NSManagedObject+SYNC.m */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2E03C677193697BE005DC84A /* NSSyncTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSyncTests.m; sourceTree = "<group>"; };
 		2ED05C2C193538510082B792 /* libCGDataController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCGDataController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ED05C2F193538510082B792 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2ED05C33193538510082B792 /* CGDataController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CGDataController-Prefix.pch"; sourceTree = "<group>"; };
@@ -53,7 +55,7 @@
 		2ED05C40193538510082B792 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		2ED05C47193538510082B792 /* CGDataControllerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CGDataControllerTests-Info.plist"; sourceTree = "<group>"; };
 		2ED05C49193538510082B792 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2ED05C4B193538510082B792 /* CGDataControllerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CGDataControllerTests.m; sourceTree = "<group>"; };
+		2ED05C4B193538510082B792 /* CGDataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CGDataTests.m; sourceTree = "<group>"; };
 		2ED05C55193539270082B792 /* NSManagedObject+SYNC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+SYNC.h"; sourceTree = "<group>"; };
 		2ED05C56193539270082B792 /* NSManagedObject+SYNC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+SYNC.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,7 +135,8 @@
 		2ED05C45193538510082B792 /* CGDataControllerTests */ = {
 			isa = PBXGroup;
 			children = (
-				2ED05C4B193538510082B792 /* CGDataControllerTests.m */,
+				2ED05C4B193538510082B792 /* CGDataTests.m */,
+				2E03C677193697BE005DC84A /* NSSyncTests.m */,
 				2ED05C46193538510082B792 /* Supporting Files */,
 			);
 			path = CGDataControllerTests;
@@ -256,7 +259,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ED05C4C193538510082B792 /* CGDataControllerTests.m in Sources */,
+				2ED05C4C193538510082B792 /* CGDataTests.m in Sources */,
+				2E03C678193697BE005DC84A /* NSSyncTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
