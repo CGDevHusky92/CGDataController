@@ -12,7 +12,7 @@
 
 @implementation NSManagedObject (SYNC)
 
-@dynamic parseClassName;
+@dynamic className;
 @dynamic createdAt;
 @dynamic objectId;
 @dynamic updatedAt;

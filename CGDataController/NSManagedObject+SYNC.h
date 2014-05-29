@@ -11,7 +11,7 @@
 
 @interface NSManagedObject (SYNC)
 
-@property (nonatomic, retain) NSString *parseClassName;
+@property (nonatomic, retain) NSString *className;
 @property (nonatomic, retain) NSDate *createdAt;
 @property (nonatomic, retain) NSString *objectId;
 @property (nonatomic, retain) NSDate *updatedAt;
