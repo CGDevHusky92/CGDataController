@@ -155,8 +155,7 @@ static CGDataController *sharedData;
         return _managedObjectModel;
     }
     
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    _managedObjectModel = [self modifiedObjectModel];
     
     // ThisOrThat Hack
 #ifdef THISORTHAT_HACK
@@ -199,6 +198,55 @@ static CGDataController *sharedData;
     return _persistentStoreCoordinator;
 }
 
+- (NSManagedObjectModel *)modifiedObjectModel
+{
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"momd"];
+    NSManagedObjectModel *modifiableModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
+    NSMutableArray *entities = [NSMutableArray array];
+    for (NSEntityDescription *ent in [modifiableModel entities]) {
+        NSMutableArray *currentProps = [[ent properties] mutableCopy];
+        
+        NSAttributeDescription *objId = [[NSAttributeDescription alloc] init];
+        [objId setName:@"objectId"];
+        [objId setAttributeType:NSStringAttributeType];
+#ifdef PARSE
+        [objId setOptional:YES];
+#else
+        [objId setOptional:NO];
+#endif
+        [currentProps addObject:objId];
+        
+        NSAttributeDescription *createdAt = [[NSAttributeDescription alloc] init];
+        [createdAt setName:@"createdAt"];
+        [createdAt setAttributeType:NSDateAttributeType];
+#ifdef PARSE
+        [createdAt setOptional:YES];
+#else
+        [createdAt setOptional:NO];
+#endif
+        [currentProps addObject:createdAt];
+        
+        NSAttributeDescription *updatedAt = [[NSAttributeDescription alloc] init];
+        [updatedAt setName:@"updatedAt"];
+        [updatedAt setAttributeType:NSDateAttributeType];
+        [updatedAt setOptional:NO];
+        [currentProps addObject:updatedAt];
+        
+        NSAttributeDescription *syncStatus = [[NSAttributeDescription alloc] init];
+        [syncStatus setName:@"syncStatus"];
+        [syncStatus setAttributeType:NSInteger16AttributeType];
+        [syncStatus setOptional:NO];
+        [currentProps addObject:syncStatus];
+        
+        [ent setProperties:currentProps];
+        [entities addObject:ent];
+    }
+    [modifiableModel setEntities:entities];
+    
+    return modifiableModel;
+}
+
 - (void)resetStore
 {
     NSError *error = nil;
@@ -232,8 +280,9 @@ static CGDataController *sharedData;
 
 - (NSString *)generateUniqueID
 {
-#warning Implement
-    return nil;
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    NSString *ret = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+    return ret;
 }
 
 #pragma mark - Requests For Specific Object
@@ -251,7 +300,14 @@ static CGDataController *sharedData;
     
     if (!obj) {
         NSLog(@"Error: Could not create object for class <%@>", className);
+        return nil;
     }
+    
+    NSDate *date = [NSDate date];
+    [obj setCreatedAt:date];
+    [obj setUpdatedAt:date];
+    [obj setObjectId:[self generateUniqueID]];
+    [obj setSyncStatus:@(kCGPendingSyncStatus)];
     
     return obj;
 }
@@ -398,6 +454,8 @@ static CGDataController *sharedData;
     
     return results;
 }
+
+
 
 #pragma mark - Application's Documents directory
 

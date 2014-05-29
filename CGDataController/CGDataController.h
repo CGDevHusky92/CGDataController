@@ -14,9 +14,9 @@
 
 typedef enum CGSyncStatus
 {
-    kCGSyncStable = 1,
-    kCGSyncPending,
-    kCGSyncSyncing
+    kCGStableSyncStatus = 1,
+    kCGPendingSyncStatus,
+    kCGSyncingSyncStatus
 } CGSyncStatus;
 
 @interface CGDataController : NSObject
