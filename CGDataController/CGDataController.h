@@ -62,8 +62,11 @@ typedef enum CGSyncStatus
 /* Unique ID Generation */
 - (NSString *)generateUniqueID;
 
-/* Fetch Object */
+/* Generate New Object With Class */
 - (NSManagedObject *)newManagedObjectForClass:(NSString *)className;
+
+/* Single Object Existence and Fetch */
+- (BOOL)objectExistsOnDiskWithClass:(NSString *)className andObjectId:(NSString *)objId;
 - (NSManagedObject *)managedObjectForClass:(NSString *)className withId:(NSString *)objId;
 
 /* Fetch Objects */

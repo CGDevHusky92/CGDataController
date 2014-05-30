@@ -310,12 +310,6 @@ static CGDataController *sharedData;
 
 #pragma mark - Requests For Specific Object
 
-- (BOOL)objectExistsOnDisk:(NSString *)objId
-{
-#warning Implement
-    return NO;
-}
-
 - (NSManagedObject *)newManagedObjectForClass:(NSString *)className
 {
     NSManagedObjectContext *context = [self backgroundManagedObjectContext];
@@ -335,17 +329,21 @@ static CGDataController *sharedData;
     return obj;
 }
 
+- (BOOL)objectExistsOnDiskWithClass:(NSString *)className andObjectId:(NSString *)objId
+{
+    if (!className || !objId) return NO;
+    NSArray *objArray = [self managedObjectsForClass:className sortedByKey:@"createdAt" withPredicate:[NSPredicate predicateWithFormat:@"objectId like %@", objId]];
+    if (!objArray) return NO;
+    if ([objArray count] > 1 || [objArray count] == 0) return NO;
+    return YES;
+}
+
 - (NSManagedObject *)managedObjectForClass:(NSString *)className withId:(NSString *)objId
 {
     if (!className || !objId) return nil;
-    
     NSArray *objArray = [self managedObjectsForClass:className sortedByKey:@"createdAt" withPredicate:[NSPredicate predicateWithFormat:@"objectId like %@", objId]];
-    
-    if ([objArray count] != 1) {
-        NSLog(@"Error: More then one object for objectId <%@>", objId);
-        return nil;
-    }
-    
+    if (!objArray) return nil;
+    if ([objArray count] > 1 || [objArray count] == 0) return nil;
     return [objArray objectAtIndex:0];
 }
 
