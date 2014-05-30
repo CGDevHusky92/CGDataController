@@ -11,10 +11,11 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/CGDevHusky92/CGDataController.git", :tag => "0.7.5" }
 
   s.platform     = :ios, '7.0'
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '7.1'
   s.requires_arc = true
 
   s.source_files = 'Classes/'
-  s.public_header_files = 'Classes/**/*.h'
-  s.frameworks = 'CoreData', 'Foundation'
+  s.ios.exclude_files = 'Classes/pubheaders'
+  s.osx.exclude_files = 'Classes/pubheaders'
+  s.public_header_files = 'Classes/pubheaders/*.h'
 end
