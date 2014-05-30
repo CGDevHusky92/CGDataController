@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/CGDevHusky92/CGDataController.git", :tag => "0.7.5" }
 
   s.platform     = :ios, '7.0'
-  s.ios.deployment_target = '7.1'
+  s.ios.deployment_target = '7.0'
   s.requires_arc = true
 
   s.source_files = 'Classes/'
