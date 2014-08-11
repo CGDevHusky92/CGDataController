@@ -27,36 +27,52 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *
- *  Last updated on 5/29/14
+ *  Last updated on 8/7/14
  */
 
 #import "CGDataController.h"
 
-@interface CGDataController()
+//typedef NS_ENUM(NSString, CGDataExceptionNames) {
+//    kCGDataStoreNameException=@""
+//};
 
-@property (nonatomic, strong) NSManagedObjectContext *masterManagedObjectContext;
-@property (nonatomic, strong) NSManagedObjectContext *backgroundManagedObjectContext;
-@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+NSString * const kCGDataControllerFinishedSaveNotification = @"kCGDataControllerFinishedSaveNotification";
+NSString * const kCGDataControllerFinishedBackgroundSaveNotification = @"kCGDataControllerFinishedBackgroundSaveNotification";
 
-@property (strong, nonatomic) NSString *storeName;
+NSString * const kCGDataInitException = @"CGDataInitException";
+NSString * const kCGDataStoreNameException = @"CGDataStoreNameException";
+NSString * const kCGDataSaveFailedException = @"CGDataSaveFailedException";
+NSString * const kCGDataNoCoordinatorException = @"CGDataNoCoordinatorException";
+NSString * const kCGDataNoModelException = @"CGDataNoModelException";
+NSString * const kCGDataNilParameterException = @"CGDataNilParameterException";
+NSString * const kCGDataFetchFailedException = @"CGDataFetchFailedException";
+NSString * const kCGDataCreateObjectFailedException = @"CGDataCreateObjectFailedException";
+NSString * const kCGDataFatalErrorException = @"CGDataFatalErrorException";
+
+@interface CGDataController ()
+
+@property (strong, nonatomic) NSManagedObjectContext * masterManagedObjectContext;
+@property (strong, nonatomic) NSManagedObjectContext * backgroundManagedObjectContext;
+@property (strong, nonatomic) NSManagedObjectModel * managedObjectModel;
+@property (strong, nonatomic) NSPersistentStoreCoordinator * persistentStoreCoordinator;
+
+@property (strong, nonatomic) NSString * storeName;
+@property (strong, nonatomic) NSDateFormatter * formatter;
 
 - (instancetype)initWithStoreName:(NSString *)name;
 
+- (NSURL *)applicationDocumentsDirectory;
 - (NSManagedObjectContext *)masterManagedObjectContext;
-- (NSManagedObjectContext *)newManagedObjectContext;
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
-
-- (NSURL *)applicationDocumentsDirectory;
 
 @end
 
 @implementation CGDataController
-@synthesize masterManagedObjectContext = _masterManagedObjectContext;
-@synthesize backgroundManagedObjectContext = _backgroundManagedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize masterManagedObjectContext=_masterManagedObjectContext;
+@synthesize backgroundManagedObjectContext=_backgroundManagedObjectContext;
+@synthesize managedObjectModel=_managedObjectModel;
+@synthesize persistentStoreCoordinator=_persistentStoreCoordinator;
 
 static dispatch_once_t once;
 static CGDataController *sharedData;
@@ -72,9 +88,15 @@ static CGDataController *sharedData;
 + (instancetype)sharedData
 {
     dispatch_once(&once, ^{
-        sharedData = [[self alloc] init];
+        NSString * reason = @"You must set a store name by calling +(id)initSharedDataWithStoreName: before making calls to +(id)sharedData";
+        @throw [NSException exceptionWithName:@"CGDataStoreNameException" reason:reason userInfo:nil];
     });
     return sharedData;
+}
+
+- (instancetype)init
+{
+    @throw [NSException exceptionWithName:@"CGDataInitException" reason:@"init should not be called directly" userInfo:nil];
 }
 
 - (instancetype)initWithStoreName:(NSString *)name
@@ -82,124 +104,78 @@ static CGDataController *sharedData;
     self = [super init];
     if (self) {
         _storeName = name;
+        [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification object:nil queue:nil usingBlock:^(NSNotification * note) {
+            NSManagedObjectContext * moc = _masterManagedObjectContext;
+            if (note.object != moc) {
+                [moc performBlock:^(){
+                    [moc mergeChangesFromContextDidSaveNotification:note];
+                }];
+            } else {
+#warning Notify for save????
+            }
+        }];
     }
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:nil];
+}
+
 #pragma mark - Core Data stack
 
-// Used to propegate saves to the persistent store (disk) without blocking the UI
 - (NSManagedObjectContext *)masterManagedObjectContext
 {
-    if (_masterManagedObjectContext != nil) {
-        return _masterManagedObjectContext;
-    }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
-        _masterManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [_masterManagedObjectContext performBlockAndWait:^{
-            [_masterManagedObjectContext setPersistentStoreCoordinator:coordinator];
-        }];
-    }
-    
+    if (_masterManagedObjectContext) return _masterManagedObjectContext;
+    _masterManagedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSMainQueueConcurrencyType];
     return _masterManagedObjectContext;
 }
 
-// Return the NSManagedObjectContext to be used in the background during sync
 - (NSManagedObjectContext *)backgroundManagedObjectContext
 {
-    if (_backgroundManagedObjectContext != nil) {
-        return _backgroundManagedObjectContext;
-    }
-    
-    NSManagedObjectContext *masterContext = [self masterManagedObjectContext];
-    if (masterContext != nil) {
-        _backgroundManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [_backgroundManagedObjectContext performBlockAndWait:^{
-            [_backgroundManagedObjectContext setParentContext:masterContext]; 
-        }];
-    }
-    
+    if (_backgroundManagedObjectContext) return _backgroundManagedObjectContext;
+    _backgroundManagedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSPrivateQueueConcurrencyType];
     return _backgroundManagedObjectContext;
 }
 
-// Return a new NSManagedObjectContext
-- (NSManagedObjectContext *)newManagedObjectContext
+- (NSManagedObjectContext *)setupManagedObjectContextWithConcurrencyType:(NSManagedObjectContextConcurrencyType)concurrencyType
 {
-    NSManagedObjectContext *newContext = nil;
-    NSManagedObjectContext *masterContext = [self masterManagedObjectContext];
-    if (masterContext != nil) {
-        newContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-        [newContext performBlockAndWait:^{
-            [newContext setParentContext:masterContext]; 
+    NSManagedObjectContext *managedObjectContext;
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    if (coordinator) {
+        managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:concurrencyType];
+        [managedObjectContext performBlockAndWait:^{
+            [managedObjectContext setPersistentStoreCoordinator:coordinator];
         }];
+        return managedObjectContext;
+    } else {
+        @throw [NSException exceptionWithName:kCGDataNoCoordinatorException reason:@"Coordinator not found." userInfo:nil];
     }
-    return newContext;
 }
 
 - (void)saveMasterContext
 {
     [self.masterManagedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
+        NSError * error;
         BOOL saved = [self.masterManagedObjectContext save:&error];
-        if (!saved) {
-            // do some real error handling
-            NSLog(@"Error: %@", [error localizedDescription]);
-        }
+        if (!saved) @throw [NSException exceptionWithName:kCGDataSaveFailedException reason:[error localizedDescription] userInfo:[error userInfo]];
     }];
 }
 
-- (void)saveBackgroundContext
+- (void)save
 {
     [self.backgroundManagedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
+        NSError * error;
         BOOL saved = [self.backgroundManagedObjectContext save:&error];
-        if (!saved) {
-            // do some real error handling
-            NSLog(@"Error: %@", [error localizedDescription]);
-        }
+        if (!saved) @throw [NSException exceptionWithName:kCGDataSaveFailedException reason:[error localizedDescription] userInfo:[error userInfo]];
     }];
 }
 
-- (void)performFullSaveOnMainThread
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self saveBackgroundContext];
-        [self saveMasterContext];
-    });
-}
-
-// Returns the managed object model for the application.
-// If the model doesn't already exist, it is created from the application's model.
-- (NSManagedObjectModel *)managedObjectModel
-{
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
-    
-    _managedObjectModel = [self modifiedObjectModel];
-    
-    // ThisOrThat Hack
-#ifdef THISORTHAT_HACK
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (![defaults objectForKey:@"ModelUpdate1.2.0"] || ![[defaults objectForKey:@"ModelUpdate1.2.0"] boolValue]) {
-        [defaults setObject:[NSNumber numberWithBool:YES] forKey:@"ModelUpdate1.2.0"];
-        [defaults synchronize];
-        [self deleteStore];
-    }
-#endif
-    
-    return _managedObjectModel;
-}
-
-// Returns the persistent store coordinator for the application.
-// If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
-    if (_persistentStoreCoordinator != nil) {
+    if (_persistentStoreCoordinator)
         return _persistentStoreCoordinator;
-    }
     
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", _storeName]];
     
@@ -209,74 +185,89 @@ static CGDataController *sharedData;
     
     NSManagedObjectModel *model = [self managedObjectModel];
     if (model) {
-        NSError *error = nil;
+        NSError *error;
         _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
         if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
-            NSLog(@"Error: %@ - %@", error, [error userInfo]);
+            @throw [NSException exceptionWithName:kCGDataNoCoordinatorException reason:[error localizedDescription] userInfo:[error userInfo]];
         }
-    } else {
-        NSLog(@"Error: ManagedObjectModel is nil");
     }
     
     return _persistentStoreCoordinator;
 }
 
+- (NSManagedObjectModel *)managedObjectModel
+{
+    if (_managedObjectModel)
+        return _managedObjectModel;
+    _managedObjectModel = [self modifiedObjectModel];
+    return _managedObjectModel;
+}
+
 - (NSManagedObjectModel *)modifiedObjectModel
 {
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"momd"];
-    NSManagedObjectModel *modifiableModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    
-    NSMutableArray *entities = [NSMutableArray array];
-    for (NSEntityDescription *ent in [modifiableModel entities]) {
-        NSMutableArray *currentProps = [[ent properties] mutableCopy];
-        
-        NSAttributeDescription *objId = [[NSAttributeDescription alloc] init];
-        [objId setName:@"objectId"];
-        [objId setAttributeType:NSStringAttributeType];
-#ifdef PARSE
-        [objId setOptional:YES];
-#else
-        [objId setOptional:NO];
-#endif
-        [currentProps addObject:objId];
-        
-        NSAttributeDescription *createdAt = [[NSAttributeDescription alloc] init];
-        [createdAt setName:@"createdAt"];
-        [createdAt setAttributeType:NSDateAttributeType];
-#ifdef PARSE
-        [createdAt setOptional:YES];
-#else
-        [createdAt setOptional:NO];
-#endif
-        [currentProps addObject:createdAt];
-        
-        NSAttributeDescription *updatedAt = [[NSAttributeDescription alloc] init];
-        [updatedAt setName:@"updatedAt"];
-        [updatedAt setAttributeType:NSDateAttributeType];
-        [updatedAt setOptional:NO];
-        [currentProps addObject:updatedAt];
-        
-        NSAttributeDescription *syncStatus = [[NSAttributeDescription alloc] init];
-        [syncStatus setName:@"syncStatus"];
-        [syncStatus setAttributeType:NSInteger16AttributeType];
-        [syncStatus setOptional:NO];
-        [currentProps addObject:syncStatus];
-        
-        [ent setProperties:currentProps];
-        [entities addObject:ent];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"mom"];
+    if (!modelURL) {
+        modelURL = [[NSBundle mainBundle] URLForResource:_storeName withExtension:@"momd"];
     }
-    [modifiableModel setEntities:entities];
     
-    return modifiableModel;
+    if (modelURL) {
+        NSManagedObjectModel *modifiableModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+        
+        NSMutableArray *entities = [NSMutableArray array];
+        for (NSEntityDescription *ent in [modifiableModel entities]) {
+            NSMutableArray *currentProps = [[ent properties] mutableCopy];
+            
+            NSAttributeDescription *objId = [[NSAttributeDescription alloc] init];
+            [objId setName:@"objectId"];
+            [objId setAttributeType:NSStringAttributeType];
+            [objId setOptional:NO];
+            [currentProps addObject:objId];
+            
+            NSAttributeDescription *createdAt = [[NSAttributeDescription alloc] init];
+            [createdAt setName:@"createdAt"];
+            [createdAt setAttributeType:NSStringAttributeType];
+            [createdAt setOptional:NO];
+            [currentProps addObject:createdAt];
+            
+            NSAttributeDescription *updatedAt = [[NSAttributeDescription alloc] init];
+            [updatedAt setName:@"updatedAt"];
+            [updatedAt setAttributeType:NSStringAttributeType];
+            [updatedAt setOptional:NO];
+            [currentProps addObject:updatedAt];
+            
+            NSAttributeDescription *wasDeleted = [[NSAttributeDescription alloc] init];
+            [wasDeleted setName:@"wasDeleted"];
+            [wasDeleted setAttributeType:NSBooleanAttributeType];
+            [wasDeleted setOptional:NO];
+            [wasDeleted setDefaultValue:[NSNumber numberWithBool:NO]];
+            [currentProps addObject:wasDeleted];
+            
+            NSAttributeDescription *note = [[NSAttributeDescription alloc] init];
+            [note setName:@"note"];
+            [note setAttributeType:NSStringAttributeType];
+            [note setOptional:YES];
+            [currentProps addObject:note];
+            
+            NSAttributeDescription *syncStatus = [[NSAttributeDescription alloc] init];
+            [syncStatus setName:@"syncStatus"];
+            [syncStatus setAttributeType:NSInteger16AttributeType];
+            [syncStatus setOptional:NO];
+            [currentProps addObject:syncStatus];
+            
+            [ent setProperties:currentProps];
+            [entities addObject:ent];
+        }
+        [modifiableModel setEntities:entities];
+        
+        return modifiableModel;
+    } else {
+        @throw [NSException exceptionWithName:kCGDataNoModelException reason:@"Model could not be found in resources." userInfo:nil];
+    }
 }
 
 - (void)resetStore
 {
-    NSError *error = nil;
-    [self saveBackgroundContext];
-    if (error) {
-        NSLog(@"Error: %@", [error localizedDescription]);
-    }
+    [self save];
     [self saveMasterContext];
     _backgroundManagedObjectContext = nil;
     _masterManagedObjectContext = nil;
@@ -287,43 +278,50 @@ static CGDataController *sharedData;
 - (void)deleteStore
 {
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", _storeName]];
-    
     if ([[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
-        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
-        for (NSManagedObject *ct in [_masterManagedObjectContext registeredObjects]) {
-            [_masterManagedObjectContext deleteObject:ct];
+        NSError * error;
+        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
+        if (!error) {
+            for (NSManagedObject *ct in [_masterManagedObjectContext registeredObjects]) {
+                [_masterManagedObjectContext deleteObject:ct];
+            }
+        } else {
+            @throw [NSException exceptionWithName:kCGDataFatalErrorException reason:[error localizedDescription] userInfo:[error userInfo]];
         }
     }
-    
     _persistentStoreCoordinator = nil;
     [self persistentStoreCoordinator];
 }
 
-#pragma mark - Unique ID Generation Implementation
+#pragma mark - Date Formatter
 
-- (NSString *)generateUniqueID
+- (NSDateFormatter *)dateFormatter
 {
-    CFUUIDRef uuid = CFUUIDCreate(NULL);
-    NSString *ret = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
-    return ret;
+    if (!_formatter) {
+        _formatter = [[NSDateFormatter alloc] init];
+        [_formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [_formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        [_formatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+    }
+    return _formatter;
 }
 
 #pragma mark - Requests For Specific Object
 
 - (NSManagedObject *)newManagedObjectForClass:(NSString *)className
 {
+    if (!className) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"Class name is nil." userInfo:nil];
     NSManagedObjectContext *context = [self backgroundManagedObjectContext];
     NSManagedObject *obj = [NSEntityDescription insertNewObjectForEntityForName:className inManagedObjectContext:context];
-    
-    if (!obj) {
-        NSLog(@"Error: Could not create object for class <%@>", className);
-        return nil;
-    }
+    if (!obj) @throw [NSException exceptionWithName:kCGDataCreateObjectFailedException reason:[NSString stringWithFormat:@"Could not create object for class <%@>", className] userInfo:nil];
     
     NSDate *date = [NSDate date];
-    [obj setCreatedAt:date];
-    [obj setUpdatedAt:date];
-    [obj setObjectId:[self generateUniqueID]];
+    NSDateFormatter *formatter = [self dateFormatter];
+    
+    [obj setCreatedAt:[formatter stringFromDate:date]];
+    [obj setUpdatedAt:[formatter stringFromDate:date]];
+    [obj setObjectId:[[NSUUID UUID] UUIDString]];
+#warning better sync status
     [obj setSyncStatus:@(kCGPendingSyncStatus)];
     
     return obj;
@@ -338,12 +336,49 @@ static CGDataController *sharedData;
     return YES;
 }
 
+#pragma mark - Fetch Request For Specific Object
+
+- (NSManagedObject *)managedObjectWithManagedID:(NSManagedObjectID *)objID
+{
+    if (!objID) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"NSManagedObjectID is nil." userInfo:nil];
+    return [[self backgroundManagedObjectContext] objectRegisteredForID:objID];
+}
+
 - (NSManagedObject *)managedObjectForClass:(NSString *)className withId:(NSString *)objId
 {
-    if (!className || !objId) return nil;
-    NSArray *objArray = [self managedObjectsForClass:className sortedByKey:@"createdAt" withPredicate:[NSPredicate predicateWithFormat:@"objectId like %@", objId]];
+    if (!className || !objId) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"Class name or objectId is nil." userInfo:nil];
+    NSArray * objArray = [self managedObjectsForClass:className sortedByKey:@"createdAt" withPredicate:[NSPredicate predicateWithFormat:@"objectId like %@", objId]];
     if (!objArray) return nil;
-    if ([objArray count] > 1 || [objArray count] == 0) return nil;
+    if ([objArray count] > 1 || [objArray count] == 0) @throw [NSException exceptionWithName:kCGDataFatalErrorException reason:@"More than one object has that objectId." userInfo:nil];
+    return [objArray objectAtIndex:0];
+}
+
+- (NSManagedObject *)nth:(NSUInteger)num managedObjectForClass:(NSString *)className
+{
+    if (!className) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"Class name is nil." userInfo:nil];
+    NSArray * objArray = [self managedObjectsForClass:className sortedByKey:@"updatedAt" ascending:NO];
+    if (objArray && [objArray count] >= num)
+        return [objArray objectAtIndex:(num - 1)];
+    return nil;
+}
+
+#pragma mark - Fetch Request For Specific Dictionary
+
+- (NSDictionary *)managedObjAsDictionaryWithManagedID:(NSManagedObjectID *)objID
+{
+    if (!objID) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"NSManagedObjectID is nil." userInfo:nil];
+    NSManagedObject * manObj = [[self backgroundManagedObjectContext] objectRegisteredForID:objID];
+#warning Test to make sure getting correct info...
+    NSLog(@"Managed Object As Dictionary Class Name - %@", [[manObj entity] managedObjectClassName]);
+    return [self managedObjAsDictionaryForClass:[[manObj entity] managedObjectClassName] withId:[manObj objectId]];
+}
+
+- (NSDictionary *)managedObjAsDictionaryForClass:(NSString *)className withId:(NSString *)objId
+{
+    if (!className || !objId) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"Class name or objectId is nil." userInfo:nil];
+    NSArray *objArray = [self managedObjsAsDictionariesForClass:className sortedByKey:@"createdAt" withPredicate:[NSPredicate predicateWithFormat:@"objectId like %@", objId]];
+    if (!objArray) return nil;
+    if ([objArray count] > 1 || [objArray count] == 0) @throw [NSException exceptionWithName:kCGDataFatalErrorException reason:@"More than one object has that objectId." userInfo:nil];
     return [objArray objectAtIndex:0];
 }
 
@@ -390,24 +425,20 @@ static CGDataController *sharedData;
 
 - (NSArray *)managedObjectsForClass:(NSString *)className sortedByKey:(NSString *)key withBatchSize:(int)num withPredicate:(NSPredicate *)predicate ascending:(BOOL)ascend
 {
+    if (!className) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"Class name was nil." userInfo:nil];
     __block NSArray *results = nil;
     NSManagedObjectContext *managedObjectContext = [[CGDataController sharedData] backgroundManagedObjectContext];
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:className];
+    
     [fetchRequest setFetchBatchSize:num];
-    
-    if (key) {
-        [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:key ascending:ascend]]];
-    }
-    
-    if (predicate) {
-        [fetchRequest setPredicate:predicate];
-    }
+    if (key) [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:key ascending:ascend]]];
+    if (predicate) [fetchRequest setPredicate:predicate];
     
     [managedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
+        NSError * error;
         results = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        if (error) @throw [NSException exceptionWithName:kCGDataFetchFailedException reason:[error localizedDescription] userInfo:[error userInfo]];
     }];
-    
     return results;
 }
 
@@ -454,33 +485,26 @@ static CGDataController *sharedData;
 
 - (NSArray *)managedObjsAsDictionariesForClass:(NSString *)className sortedByKey:(NSString *)key withBatchSize:(int)num withPredicate:(NSPredicate *)predicate ascending:(BOOL)ascend
 {
+    if (!className) @throw [NSException exceptionWithName:kCGDataNilParameterException reason:@"Class name was nil." userInfo:nil];
     __block NSArray *results = nil;
     NSManagedObjectContext *managedObjectContext = [[CGDataController sharedData] backgroundManagedObjectContext];
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:className];
+    
     [fetchRequest setFetchBatchSize:num];
     [fetchRequest setResultType:NSDictionaryResultType];
-    
-    if (key) {
-        [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:key ascending:ascend]]];
-    }
-    
-    if (predicate) {
-        [fetchRequest setPredicate:predicate];
-    }
+    if (key) [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:key ascending:ascend]]];
+    if (predicate) [fetchRequest setPredicate:predicate];
     
     [managedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
+        NSError * error;
         results = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        if (error) @throw [NSException exceptionWithName:kCGDataFetchFailedException reason:[error localizedDescription] userInfo:[error userInfo]];
     }];
-    
     return results;
 }
 
-
-
 #pragma mark - Application's Documents directory
 
-// Returns the URL to the application's Documents directory.
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];

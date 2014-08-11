@@ -37,37 +37,44 @@
 
 #import "NSManagedObject+SYNC.h"
 
-typedef enum CGSyncStatus
-{
-    kCGStableSyncStatus = 1,
+typedef NS_ENUM(NSInteger, CGDSyncStatus) {
+    kCGStableSyncStatus,
     kCGPendingSyncStatus,
     kCGSyncingSyncStatus
-} CGSyncStatus;
+};
+
+extern NSString * const kCGDataControllerFinishedSaveNotification;
+extern NSString * const kCGDataControllerFinishedBackgroundSaveNotification;
 
 @interface CGDataController : NSObject
 
 + (instancetype)initSharedDataWithStoreName:(NSString *)name;
 + (instancetype)sharedData;
+
 - (NSManagedObjectContext *)backgroundManagedObjectContext;
 
 /* Context Saves */
 - (void)saveMasterContext;
-- (void)saveBackgroundContext;
-- (void)performFullSaveOnMainThread;
+- (void)save;
 
 /* Storage Delete and Resets */
 - (void)resetStore;
 - (void)deleteStore;
 
-/* Unique ID Generation */
-- (NSString *)generateUniqueID;
-
 /* Generate New Object With Class */
 - (NSManagedObject *)newManagedObjectForClass:(NSString *)className;
 
-/* Single Object Existence and Fetch */
+/* Single Object Existence */
 - (BOOL)objectExistsOnDiskWithClass:(NSString *)className andObjectId:(NSString *)objId;
+
+/* Single Managed Object Fetch */
+- (NSManagedObject *)managedObjectWithManagedID:(NSManagedObjectID *)objID;
 - (NSManagedObject *)managedObjectForClass:(NSString *)className withId:(NSString *)objId;
+- (NSManagedObject *)nth:(NSUInteger)num managedObjectForClass:(NSString *)className;
+
+/* Single Dictionary Fetch */
+- (NSDictionary *)managedObjAsDictionaryWithManagedID:(NSManagedObjectID *)objID;
+- (NSDictionary *)managedObjAsDictionaryForClass:(NSString *)className withId:(NSString *)objId;
 
 /* Fetch Objects */
 - (NSArray *)managedObjectsForClass:(NSString *)className;
