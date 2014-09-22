@@ -38,7 +38,7 @@ static char formatKey;
                 NSArray *objIds = [cleanDic objectForKey:relKey];
                 if (![objIds isKindOfClass:[NSNull class]]) {
                     for (NSString *objId in objIds) {
-                        NSArray *objArr = [[CGDataController sharedData] managedObjectsForClass:[[description destinationEntity] managedObjectClassName] sortedByKey:nil withPredicate:[NSPredicate predicateWithFormat:@"objectId == %@", objId] ascending:YES];
+                        NSArray *objArr = [[CGDataController sharedData] managedObjectsForClass:[[description destinationEntity] managedObjectClassName] sortedByKey:nil ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"objectId == %@", objId]];
                         if (objArr && [objArr count] > 0) {
                             NSManagedObject *obj = [objArr objectAtIndex:0];
                             NSString *sel = [NSString stringWithFormat:@"add%@sObject:", [[description destinationEntity] managedObjectClassName]];
@@ -72,7 +72,7 @@ static char formatKey;
                     }
                 }
             } else {
-                NSArray *objArr = [[CGDataController sharedData] managedObjectsForClass:[[description destinationEntity] managedObjectClassName] sortedByKey:nil withPredicate:[NSPredicate predicateWithFormat:@"objectId == %@", [cleanDic objectForKey:relKey]] ascending:YES];
+                NSArray *objArr = [[CGDataController sharedData] managedObjectsForClass:[[description destinationEntity] managedObjectClassName] sortedByKey:nil ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"objectId == %@", [cleanDic objectForKey:relKey]]];
                 if (objArr && [objArr count] > 0) {
                     NSManagedObject *obj = [objArr objectAtIndex:0];
                     NSString *sel = [NSString stringWithFormat:@"set%@:", [[description destinationEntity] managedObjectClassName]];

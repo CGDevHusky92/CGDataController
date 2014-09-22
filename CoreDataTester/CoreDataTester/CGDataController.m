@@ -226,13 +226,13 @@ static CGDataController *sharedData;
             
             NSAttributeDescription *createdAt = [[NSAttributeDescription alloc] init];
             [createdAt setName:@"createdAt"];
-            [createdAt setAttributeType:NSStringAttributeType];
+            [createdAt setAttributeType:NSDateAttributeType];
             [createdAt setOptional:NO];
             [currentProps addObject:createdAt];
             
             NSAttributeDescription *updatedAt = [[NSAttributeDescription alloc] init];
             [updatedAt setName:@"updatedAt"];
-            [updatedAt setAttributeType:NSStringAttributeType];
+            [updatedAt setAttributeType:NSDateAttributeType];
             [updatedAt setOptional:NO];
             [currentProps addObject:updatedAt];
             
@@ -296,16 +296,16 @@ static CGDataController *sharedData;
 
 #pragma mark - Date Formatter
 
-- (NSDateFormatter *)dateFormatter
-{
-    if (!_formatter) {
-        _formatter = [[NSDateFormatter alloc] init];
-        [_formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        [_formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        [_formatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
-    }
-    return _formatter;
-}
+//- (NSDateFormatter *)dateFormatter
+//{
+//    if (!_formatter) {
+//        _formatter = [[NSDateFormatter alloc] init];
+//        [_formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+//        [_formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//        [_formatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+//    }
+//    return _formatter;
+//}
 
 #pragma mark - Generate Status Dictionary
 
@@ -343,9 +343,9 @@ static CGDataController *sharedData;
     if (!obj) @throw [NSException exceptionWithName:kCGDataCreateObjectFailedException reason:[NSString stringWithFormat:@"Could not create object for class <%@>", className] userInfo:nil];
     
     NSDate *date = [NSDate date];
-    NSDateFormatter *formatter = [self dateFormatter];
-    [obj setCreatedAt:[formatter stringFromDate:date]];
-    [obj setUpdatedAt:[formatter stringFromDate:date]];
+//    NSDateFormatter *formatter = [self dateFormatter];
+    [obj setCreatedAt:date]; // [formatter stringFromDate:date]];
+    [obj setUpdatedAt:date]; // [formatter stringFromDate:date]];
     [obj setObjectId:[[NSUUID UUID] UUIDString]];
     [obj setSyncStatus:@(kCGPendingSyncStatus)];
     return obj;
@@ -524,6 +524,34 @@ static CGDataController *sharedData;
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+#pragma mark - Date Conversion Methods
+
+static NSDateFormatter * dateFormatter = nil;
+
+- (NSDateFormatter *)dateFormatter
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+    });
+    return dateFormatter;
+}
+
+- (NSDate *)dateUsingStringFromAPI:(NSString *)dateString {
+    // NSDateFormatter does not like ISO 8601 so strip the milliseconds and timezone
+    //    dateString = [dateString substringWithRange:NSMakeRange(0, [dateString length]-5)];
+    return [self.dateFormatter dateFromString:dateString];
+}
+
+- (NSString *)dateStringForAPIUsingDate:(NSDate *)date {
+    NSString *dateString = [self.dateFormatter stringFromDate:date];
+    //    dateString = [dateString substringWithRange:NSMakeRange(0, [dateString length]-1)];
+    return dateString;
 }
 
 @end

@@ -101,4 +101,9 @@ extern NSString * const kCGDataControllerFinishedBackgroundSaveNotification;
 - (NSArray *)managedObjsAsDictionariesForClass:(NSString *)className sortedByKey:(NSString *)key ascending:(BOOL)ascend withBatchSize:(NSUInteger)num withPredicate:(NSPredicate *)predicate;
 - (NSArray *)managedObjsAsDictionariesForClass:(NSString *)className sortedByKey:(NSString *)key ascending:(BOOL)ascend withFetchLimit:(NSUInteger)limit withBatchSize:(NSUInteger)num withPredicate:(NSPredicate *)predicate;
 
+#pragma mark - Object Helper Methods
+
+- (NSDate *)dateUsingStringFromAPI:(NSString *)dateString;
+- (NSString *)dateStringForAPIUsingDate:(NSDate *)date;
+
 @end
