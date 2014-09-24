@@ -32,10 +32,17 @@
  *  CGDataController is designed to do <#@"description"#>
  */
 
+#import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import <Foundation/Foundation.h>
 
-#import "NSManagedObject+SYNC.h"
+#import <CGDataController/NSManagedObject+SYNC.h>
+
+//! Project version number for CGDataController.
+FOUNDATION_EXPORT double CGDataControllerVersionNumber;
+
+//! Project version string for CGDataController.
+FOUNDATION_EXPORT const unsigned char CGDataControllerVersionString[];
 
 typedef NS_ENUM(NSInteger, CGDSyncStatus) {
     kCGStableSyncStatus,
@@ -100,5 +107,10 @@ extern NSString * const kCGDataControllerFinishedBackgroundSaveNotification;
 - (NSArray *)managedObjsAsDictionariesForClass:(NSString *)className sortedByKey:(NSString *)key ascending:(BOOL)ascend withFetchLimit:(NSUInteger)limit withPredicate:(NSPredicate *)predicate;
 - (NSArray *)managedObjsAsDictionariesForClass:(NSString *)className sortedByKey:(NSString *)key ascending:(BOOL)ascend withBatchSize:(NSUInteger)num withPredicate:(NSPredicate *)predicate;
 - (NSArray *)managedObjsAsDictionariesForClass:(NSString *)className sortedByKey:(NSString *)key ascending:(BOOL)ascend withFetchLimit:(NSUInteger)limit withBatchSize:(NSUInteger)num withPredicate:(NSPredicate *)predicate;
+
+#pragma mark - Object Helper Methods
+
+- (NSDate *)dateUsingStringFromAPI:(NSString *)dateString;
+- (NSString *)dateStringForAPIUsingDate:(NSDate *)date;
 
 @end

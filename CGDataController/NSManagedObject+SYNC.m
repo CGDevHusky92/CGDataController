@@ -10,7 +10,6 @@
 #import "NSManagedObject+SYNC.h"
 #import "objc/runtime.h"
 
-static char formatKey;
 
 @implementation NSManagedObject (SYNC)
 
@@ -24,82 +23,99 @@ static char formatKey;
 
 - (BOOL)updateFromDictionary:(NSDictionary *)dic
 {
-    BOOL ret = YES;
-    NSDictionary *cleanDic = [self cleanDictionary:dic];
-    if (![[self dictionaryFromObject] isEqualToDictionary:cleanDic]) {
-        NSMutableDictionary *mutDic = [cleanDic mutableCopy];
-        [mutDic removeObjectsForKeys:[self relationshipKeys]];
-        [self setValuesForKeysWithDictionary:mutDic];
+    [self updateAttributesFromDictionary:dic];
+    [self updateRelationshipsFromDictionary:dic];
+    
+    NSLog(@"Final - %@", self);
+    
+    return YES;
+}
+
+- (void)updateAttributesFromDictionary:(NSDictionary *)dictionary
+{
+//    NSLog(@"Updating %@ from %@", self, dictionary);
+    
+    NSDictionary * attributes = [[self entity] attributesByName];
+    for (NSString * attribute in attributes) {
         
-        for (NSString *relKey in [self relationshipKeys]) {
-            NSRelationshipDescription *description = [[[self entity] relationshipsByName] objectForKey:relKey];
-            
-            if ([description isToMany]) {
-                NSArray *objIds = [cleanDic objectForKey:relKey];
-                if (![objIds isKindOfClass:[NSNull class]]) {
-                    for (NSString *objId in objIds) {
-                        NSArray *objArr = [[CGDataController sharedData] managedObjectsForClass:[[description destinationEntity] managedObjectClassName] sortedByKey:nil ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"objectId == %@", objId]];
-                        if (objArr && [objArr count] > 0) {
-                            NSManagedObject *obj = [objArr objectAtIndex:0];
-                            NSString *sel = [NSString stringWithFormat:@"add%@sObject:", [[description destinationEntity] managedObjectClassName]];
-                            SEL selSelector = NSSelectorFromString(sel);
-                            if ([self respondsToSelector:selSelector]) {
-                                IMP imp = [self methodForSelector:selSelector];
-                                void (*add)(id, SEL, NSManagedObject *) = (void *)imp;
-                                add(self, selSelector, obj);
-                            }
-                            
-                            if ([[description inverseRelationship] isToMany]) {
-                                NSString *objSel = [NSString stringWithFormat:@"add%@sObject:", [[self entity] managedObjectClassName]];
-                                SEL objSelector = NSSelectorFromString(objSel);
-                                if ([obj respondsToSelector:objSelector]) {
-                                    IMP imp = [obj methodForSelector:objSelector];
-                                    void (*add)(id, SEL, NSManagedObject *) = (void *)imp;
-                                    add(obj, objSelector, self);
-                                }
-                            } else {
-                                NSString *objSel = [NSString stringWithFormat:@"set%@:", [[self entity] managedObjectClassName]];
-                                SEL objSelector = NSSelectorFromString(objSel);
-                                if ([obj respondsToSelector:objSelector]) {
-                                    IMP imp = [obj methodForSelector:objSelector];
-                                    void (*add)(id, SEL, NSManagedObject *) = (void *)imp;
-                                    add(obj, objSelector, self);
-                                }
-                            }
+        id value = [dictionary objectForKey:attribute];
+        if (value == nil) continue;
+        
+        NSAttributeType attributeType = [[attributes objectForKey:attribute] attributeType];
+        if ((attributeType == NSStringAttributeType) && ([value isKindOfClass:[NSNumber class]])) {
+            value = [value stringValue];
+            if ([[self valueForKey:attribute] isEqualToString:value]) continue;
+        } else if (((attributeType == NSInteger16AttributeType) || (attributeType == NSInteger32AttributeType) || (attributeType == NSInteger64AttributeType) || (attributeType == NSBooleanAttributeType)) && ([value isKindOfClass:[NSString class]])) {
+            value = [NSNumber numberWithInteger:[value integerValue]];
+            if ([[self valueForKey:attribute] isEqual:value]) continue;
+        } else if ((attributeType == NSFloatAttributeType) &&  ([value isKindOfClass:[NSString class]])) {
+            value = [NSNumber numberWithDouble:[value doubleValue]];
+            if ([[self valueForKey:attribute] isEqual:value]) continue;
+        } else if ((attributeType == NSDateAttributeType) && ([value isKindOfClass:[NSString class]])) {
+            value = [[CGDataController sharedData] dateUsingStringFromAPI:value];
+            if ([[self valueForKey:attribute] isEqualToDate:value]) continue;
+        }
+        
+        if ([value isKindOfClass:[NSNull class]]) {
+            [self setValue:nil forKey:attribute];
+        } else {
+            [self setValue:value forKey:attribute];
+        }
+    }
+}
+
+- (BOOL)updateRelationshipsFromDictionary:(NSDictionary *)dictionary
+{
+    BOOL ret = YES;
+    NSDictionary *relationships = [[self entity] relationshipsByName];
+    for (NSString * relationship in relationships) {
+        NSRelationshipDescription * description = [[[self entity] relationshipsByName] objectForKey:relationship];
+        if ([description isToMany]) {
+            NSArray *objIds = [dictionary valueForKey:relationship];
+            if (![objIds isKindOfClass:[NSNull class]]) {
+                for (NSString *objId in objIds) {
+                    NSString * relDestClass = [[description destinationEntity] managedObjectClassName];
+                    NSManagedObject * obj = [[CGDataController sharedData] managedObjectForClass:relDestClass withId:objId];
+                    
+                    if (obj) {
+                        NSString *sel = [NSString stringWithFormat:@"add%@sObject:", [[description destinationEntity] managedObjectClassName]];
+                        SEL selSelector = NSSelectorFromString(sel);
+                        [self fireSelector:selSelector onObject:self withParameter:obj];
+                        
+                        SEL objSelector;
+                        if ([[description inverseRelationship] isToMany]) {
+                            NSString *objSel = [NSString stringWithFormat:@"add%@sObject:", [[self entity] managedObjectClassName]];
+                            objSelector = NSSelectorFromString(objSel);
                         } else {
-                            ret = NO;
+                            NSString *objSel = [NSString stringWithFormat:@"set%@:", [[self entity] managedObjectClassName]];
+                            objSelector = NSSelectorFromString(objSel);
                         }
+                        [self fireSelector:objSelector onObject:obj withParameter:self];
+                    } else {
+                        ret = NO;
                     }
                 }
-            } else {
-                NSArray *objArr = [[CGDataController sharedData] managedObjectsForClass:[[description destinationEntity] managedObjectClassName] sortedByKey:nil ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"objectId == %@", [cleanDic objectForKey:relKey]]];
-                if (objArr && [objArr count] > 0) {
-                    NSManagedObject *obj = [objArr objectAtIndex:0];
+            }
+        } else {
+            NSString * relId = [dictionary valueForKey:relationship];
+            if (![relId isKindOfClass:[NSNull class]] && ![relId isKindOfClass:[NSArray class]]) {
+                NSString * relDestClass = [[description destinationEntity] managedObjectClassName];
+                NSManagedObject * obj = [[CGDataController sharedData] managedObjectForClass:relDestClass withId:[dictionary valueForKey:relationship]];
+                
+                if (obj) {
                     NSString *sel = [NSString stringWithFormat:@"set%@:", [[description destinationEntity] managedObjectClassName]];
                     SEL selSelector = NSSelectorFromString(sel);
-                    if ([self respondsToSelector:selSelector]) {
-                        IMP imp = [self methodForSelector:selSelector];
-                        void (*add)(id, SEL, NSManagedObject *) = (void *)imp;
-                        add(self, selSelector, obj);
-                    }
+                    [self fireSelector:selSelector onObject:self withParameter:obj];
                     
+                    SEL objSelector;
                     if ([[description inverseRelationship] isToMany]) {
                         NSString *objSel = [NSString stringWithFormat:@"add%@sObject:", [[self entity] managedObjectClassName]];
-                        SEL objSelector = NSSelectorFromString(objSel);
-                        if ([obj respondsToSelector:objSelector]) {
-                            IMP imp = [obj methodForSelector:objSelector];
-                            void (*add)(id, SEL, NSManagedObject *) = (void *)imp;
-                            add(obj, objSelector, self);
-                        }
+                        objSelector = NSSelectorFromString(objSel);
                     } else {
                         NSString *objSel = [NSString stringWithFormat:@"set%@:", [[self entity] managedObjectClassName]];
-                        SEL objSelector = NSSelectorFromString(objSel);
-                        if ([obj respondsToSelector:objSelector]) {
-                            IMP imp = [obj methodForSelector:objSelector];
-                            void (*add)(id, SEL, NSManagedObject *) = (void *)imp;
-                            add(obj, objSelector, self);
-                        }
+                        objSelector = NSSelectorFromString(objSel);
                     }
+                    [self fireSelector:objSelector onObject:obj withParameter:self];
                 } else {
                     ret = NO;
                 }
@@ -110,16 +126,39 @@ static char formatKey;
     return ret;
 }
 
+- (void)fireSelector:(SEL)select onObject:(id)object withParameter:(id)param
+{
+    if ([object respondsToSelector:select]) {
+        IMP imp = [object methodForSelector:select];
+        void (*selector)(id, SEL, NSManagedObject *) = (void *)imp;
+        selector(object, select, param);
+    }
+}
+
 - (NSDictionary *)dictionaryFromObject
 {
-    NSMutableDictionary *propDic = [[self propertyDictionaryFromObject] mutableCopy];
+    NSArray * keys = [[[self entity] attributesByName] allKeys];
+    NSMutableDictionary * propDic = [[self dictionaryWithValuesForKeys:keys] mutableCopy];
+    propDic = [self convertDatesToStrings:propDic];
     [propDic addEntriesFromDictionary:[self relationshipDictionaryFromObject]];
     return propDic;
 }
 
-- (NSDictionary *)propertyDictionaryFromObject
+- (NSMutableDictionary *)convertDatesToStrings:(NSMutableDictionary *)dictionary
 {
-    return [self dictionaryWithValuesForKeys:[self propertyKeys]];
+    for (NSString * key in [dictionary allKeys]) {
+        
+        id object = [dictionary objectForKey:key];
+        
+        if ([object isKindOfClass:[NSDate class]]) {
+            
+            [dictionary setObject:[[CGDataController sharedData] dateStringForAPIUsingDate:object] forKey:key];
+            
+        }
+        
+    }
+    
+    return dictionary;
 }
 
 - (NSDictionary *)relationshipDictionaryFromObject
@@ -131,68 +170,27 @@ static char formatKey;
         if ([description isToMany]) {
             NSMutableArray *objIds = [[NSMutableArray alloc] init];
             NSSet *relationship = [self valueForKey:rel];
-            for (NSManagedObject *obj in relationship) {
+            for (NSManagedObject * obj in relationship)
                 [objIds addObject:[obj valueForKey:@"objectId"]];
-            }
-            if ([objIds count] > 0) {
+            
+            if ([objIds count] > 0)
                 [dic setObject:objIds forKey:rel];
-            } else {
+            else
                 [dic setObject:[NSNull null] forKey:rel];
-            }
         } else {
-            NSManagedObject *object = [self valueForKey:rel];
-            if (object && ![[object valueForKey:@"objectId"] isEqualToString:@""]) {
+            NSManagedObject * object = [self valueForKey:rel];
+            if (object && ![[object valueForKey:@"objectId"] isEqualToString:@""])
                 [dic setObject:[object valueForKey:@"objectId"] forKey:rel];
-            } else {
+            else
                 [dic setObject:[NSNull null] forKey:rel];
-            }
         }
     }
-    
     return dic;
 }
 
-- (NSArray *)propertyKeys
+- (void)updateDate
 {
-    return [[[self entity] attributesByName] allKeys];
-}
-
-- (NSArray *)relationshipKeys
-{
-    return [[[self entity] relationshipsByName] allKeys];
-}
-
-- (NSArray *)allKeys
-{
-    return [[self propertyKeys] arrayByAddingObjectsFromArray:[self relationshipKeys]];
-}
-
-- (NSDictionary *)cleanDictionary:(NSDictionary *)dic
-{
-    NSMutableDictionary *retDic = [dic mutableCopy];
-    [retDic removeObjectsForKeys:[self allKeys]];
-    return retDic;
-}
-
-- (NSDateFormatter *)format
-{
-    NSDateFormatter *formatter = objc_getAssociatedObject(self, &formatKey);
-    if (!formatter) {
-        formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        [formatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
-        [self setFormat:formatter];
-    }
-    return formatter;
-}
-
-- (void)setFormat:(NSDateFormatter *)formatter
-{
-    objc_setAssociatedObject(self, &formatKey, formatter, OBJC_ASSOCIATION_RETAIN);
-}
-
-- (void)updateDate {
-    [self setUpdatedAt:[[self format] stringFromDate:[NSDate date]]];
+    [self setUpdatedAt:[NSDate date]];
 }
 
 @end

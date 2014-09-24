@@ -7,161 +7,121 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2E03C678193697BE005DC84A /* NSSyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03C677193697BE005DC84A /* NSSyncTests.m */; };
-		2ED05C30193538510082B792 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C2F193538510082B792 /* Foundation.framework */; };
-		2ED05C35193538510082B792 /* CGDataController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2ED05C34193538510082B792 /* CGDataController.h */; };
-		2ED05C37193538510082B792 /* CGDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED05C36193538510082B792 /* CGDataController.m */; };
-		2ED05C3E193538510082B792 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C3D193538510082B792 /* XCTest.framework */; };
-		2ED05C3F193538510082B792 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C2F193538510082B792 /* Foundation.framework */; };
-		2ED05C41193538510082B792 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C40193538510082B792 /* UIKit.framework */; };
-		2ED05C44193538510082B792 /* libCGDataController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED05C2C193538510082B792 /* libCGDataController.a */; };
-		2ED05C4A193538510082B792 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2ED05C48193538510082B792 /* InfoPlist.strings */; };
-		2ED05C4C193538510082B792 /* CGDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED05C4B193538510082B792 /* CGDataTests.m */; };
-		2ED05C57193539270082B792 /* NSManagedObject+SYNC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED05C56193539270082B792 /* NSManagedObject+SYNC.m */; };
+		D38A452B19D2120B007AD9DC /* CGDataController.h in Headers */ = {isa = PBXBuildFile; fileRef = D38A452A19D2120B007AD9DC /* CGDataController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D38A453519D2120B007AD9DC /* CGDataControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D38A453419D2120B007AD9DC /* CGDataControllerTests.m */; };
+		D38A454119D21233007AD9DC /* CGDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D38A453E19D21233007AD9DC /* CGDataController.m */; };
+		D38A454219D21233007AD9DC /* NSManagedObject+SYNC.h in Headers */ = {isa = PBXBuildFile; fileRef = D38A453F19D21233007AD9DC /* NSManagedObject+SYNC.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D38A454319D21233007AD9DC /* NSManagedObject+SYNC.m in Sources */ = {isa = PBXBuildFile; fileRef = D38A454019D21233007AD9DC /* NSManagedObject+SYNC.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		2ED05C42193538510082B792 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2ED05C24193538510082B792 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2ED05C2B193538510082B792;
-			remoteInfo = CGDataController;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		2ED05C2A193538510082B792 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-				2ED05C35193538510082B792 /* CGDataController.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		2E03C677193697BE005DC84A /* NSSyncTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSyncTests.m; sourceTree = "<group>"; };
-		2ED05C2C193538510082B792 /* libCGDataController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCGDataController.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2ED05C2F193538510082B792 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		2ED05C33193538510082B792 /* CGDataController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CGDataController-Prefix.pch"; sourceTree = "<group>"; };
-		2ED05C34193538510082B792 /* CGDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGDataController.h; sourceTree = "<group>"; };
-		2ED05C36193538510082B792 /* CGDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CGDataController.m; sourceTree = "<group>"; };
-		2ED05C3C193538510082B792 /* CGDataControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CGDataControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2ED05C3D193538510082B792 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		2ED05C40193538510082B792 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		2ED05C47193538510082B792 /* CGDataControllerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CGDataControllerTests-Info.plist"; sourceTree = "<group>"; };
-		2ED05C49193538510082B792 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2ED05C4B193538510082B792 /* CGDataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CGDataTests.m; sourceTree = "<group>"; };
-		2ED05C55193539270082B792 /* NSManagedObject+SYNC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+SYNC.h"; sourceTree = "<group>"; };
-		2ED05C56193539270082B792 /* NSManagedObject+SYNC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+SYNC.m"; sourceTree = "<group>"; };
+		D38A452519D2120B007AD9DC /* CGDataController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CGDataController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D38A452919D2120B007AD9DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D38A452A19D2120B007AD9DC /* CGDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGDataController.h; sourceTree = "<group>"; };
+		D38A453019D2120B007AD9DC /* CGDataControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CGDataControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D38A453319D2120B007AD9DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D38A453419D2120B007AD9DC /* CGDataControllerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CGDataControllerTests.m; sourceTree = "<group>"; };
+		D38A453E19D21233007AD9DC /* CGDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGDataController.m; sourceTree = "<group>"; };
+		D38A453F19D21233007AD9DC /* NSManagedObject+SYNC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+SYNC.h"; sourceTree = "<group>"; };
+		D38A454019D21233007AD9DC /* NSManagedObject+SYNC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+SYNC.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2ED05C29193538510082B792 /* Frameworks */ = {
+		D38A452119D2120B007AD9DC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ED05C30193538510082B792 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2ED05C39193538510082B792 /* Frameworks */ = {
+		D38A452D19D2120B007AD9DC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ED05C3E193538510082B792 /* XCTest.framework in Frameworks */,
-				2ED05C41193538510082B792 /* UIKit.framework in Frameworks */,
-				2ED05C3F193538510082B792 /* Foundation.framework in Frameworks */,
-				2ED05C44193538510082B792 /* libCGDataController.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2ED05C23193538510082B792 = {
+		D38A451B19D2120B007AD9DC = {
 			isa = PBXGroup;
 			children = (
-				2ED05C31193538510082B792 /* CGDataController */,
-				2ED05C45193538510082B792 /* CGDataControllerTests */,
-				2ED05C2E193538510082B792 /* Frameworks */,
-				2ED05C2D193538510082B792 /* Products */,
+				D38A452719D2120B007AD9DC /* CGDataController */,
+				D38A453119D2120B007AD9DC /* CGDataControllerTests */,
+				D38A452619D2120B007AD9DC /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		2ED05C2D193538510082B792 /* Products */ = {
+		D38A452619D2120B007AD9DC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2ED05C2C193538510082B792 /* libCGDataController.a */,
-				2ED05C3C193538510082B792 /* CGDataControllerTests.xctest */,
+				D38A452519D2120B007AD9DC /* CGDataController.framework */,
+				D38A453019D2120B007AD9DC /* CGDataControllerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2ED05C2E193538510082B792 /* Frameworks */ = {
+		D38A452719D2120B007AD9DC /* CGDataController */ = {
 			isa = PBXGroup;
 			children = (
-				2ED05C2F193538510082B792 /* Foundation.framework */,
-				2ED05C3D193538510082B792 /* XCTest.framework */,
-				2ED05C40193538510082B792 /* UIKit.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		2ED05C31193538510082B792 /* CGDataController */ = {
-			isa = PBXGroup;
-			children = (
-				2ED05C34193538510082B792 /* CGDataController.h */,
-				2ED05C36193538510082B792 /* CGDataController.m */,
-				2ED05C55193539270082B792 /* NSManagedObject+SYNC.h */,
-				2ED05C56193539270082B792 /* NSManagedObject+SYNC.m */,
-				2ED05C32193538510082B792 /* Supporting Files */,
+				D38A452A19D2120B007AD9DC /* CGDataController.h */,
+				D38A453E19D21233007AD9DC /* CGDataController.m */,
+				D38A453F19D21233007AD9DC /* NSManagedObject+SYNC.h */,
+				D38A454019D21233007AD9DC /* NSManagedObject+SYNC.m */,
+				D38A452819D2120B007AD9DC /* Supporting Files */,
 			);
 			path = CGDataController;
 			sourceTree = "<group>";
 		};
-		2ED05C32193538510082B792 /* Supporting Files */ = {
+		D38A452819D2120B007AD9DC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2ED05C33193538510082B792 /* CGDataController-Prefix.pch */,
+				D38A452919D2120B007AD9DC /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2ED05C45193538510082B792 /* CGDataControllerTests */ = {
+		D38A453119D2120B007AD9DC /* CGDataControllerTests */ = {
 			isa = PBXGroup;
 			children = (
-				2ED05C4B193538510082B792 /* CGDataTests.m */,
-				2E03C677193697BE005DC84A /* NSSyncTests.m */,
-				2ED05C46193538510082B792 /* Supporting Files */,
+				D38A453419D2120B007AD9DC /* CGDataControllerTests.m */,
+				D38A453219D2120B007AD9DC /* Supporting Files */,
 			);
 			path = CGDataControllerTests;
 			sourceTree = "<group>";
 		};
-		2ED05C46193538510082B792 /* Supporting Files */ = {
+		D38A453219D2120B007AD9DC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2ED05C47193538510082B792 /* CGDataControllerTests-Info.plist */,
-				2ED05C48193538510082B792 /* InfoPlist.strings */,
+				D38A453319D2120B007AD9DC /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		D38A452219D2120B007AD9DC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D38A452B19D2120B007AD9DC /* CGDataController.h in Headers */,
+				D38A454219D21233007AD9DC /* NSManagedObject+SYNC.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		2ED05C2B193538510082B792 /* CGDataController */ = {
+		D38A452419D2120B007AD9DC /* CGDataController */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2ED05C4F193538510082B792 /* Build configuration list for PBXNativeTarget "CGDataController" */;
+			buildConfigurationList = D38A453819D2120B007AD9DC /* Build configuration list for PBXNativeTarget "CGDataController" */;
 			buildPhases = (
-				2ED05C28193538510082B792 /* Sources */,
-				2ED05C29193538510082B792 /* Frameworks */,
-				2ED05C2A193538510082B792 /* CopyFiles */,
-				2ED05C5919353A370082B792 /* ShellScript */,
+				D38A452019D2120B007AD9DC /* Sources */,
+				D38A452119D2120B007AD9DC /* Frameworks */,
+				D38A452219D2120B007AD9DC /* Headers */,
+				D38A452319D2120B007AD9DC /* Resources */,
 			);
 			buildRules = (
 			);
@@ -169,124 +129,100 @@
 			);
 			name = CGDataController;
 			productName = CGDataController;
-			productReference = 2ED05C2C193538510082B792 /* libCGDataController.a */;
-			productType = "com.apple.product-type.library.static";
+			productReference = D38A452519D2120B007AD9DC /* CGDataController.framework */;
+			productType = "com.apple.product-type.framework";
 		};
-		2ED05C3B193538510082B792 /* CGDataControllerTests */ = {
+		D38A452F19D2120B007AD9DC /* CGDataControllerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2ED05C52193538510082B792 /* Build configuration list for PBXNativeTarget "CGDataControllerTests" */;
+			buildConfigurationList = D38A453B19D2120B007AD9DC /* Build configuration list for PBXNativeTarget "CGDataControllerTests" */;
 			buildPhases = (
-				2ED05C38193538510082B792 /* Sources */,
-				2ED05C39193538510082B792 /* Frameworks */,
-				2ED05C3A193538510082B792 /* Resources */,
+				D38A452C19D2120B007AD9DC /* Sources */,
+				D38A452D19D2120B007AD9DC /* Frameworks */,
+				D38A452E19D2120B007AD9DC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				2ED05C43193538510082B792 /* PBXTargetDependency */,
 			);
 			name = CGDataControllerTests;
 			productName = CGDataControllerTests;
-			productReference = 2ED05C3C193538510082B792 /* CGDataControllerTests.xctest */;
+			productReference = D38A453019D2120B007AD9DC /* CGDataControllerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		2ED05C24193538510082B792 /* Project object */ = {
+		D38A451C19D2120B007AD9DC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Revision Works, LLC";
+				TargetAttributes = {
+					D38A452419D2120B007AD9DC = {
+						CreatedOnToolsVersion = 6.0;
+					};
+					D38A452F19D2120B007AD9DC = {
+						CreatedOnToolsVersion = 6.0;
+					};
+				};
 			};
-			buildConfigurationList = 2ED05C27193538510082B792 /* Build configuration list for PBXProject "CGDataController" */;
+			buildConfigurationList = D38A451F19D2120B007AD9DC /* Build configuration list for PBXProject "CGDataController" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 2ED05C23193538510082B792;
-			productRefGroup = 2ED05C2D193538510082B792 /* Products */;
+			mainGroup = D38A451B19D2120B007AD9DC;
+			productRefGroup = D38A452619D2120B007AD9DC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2ED05C2B193538510082B792 /* CGDataController */,
-				2ED05C3B193538510082B792 /* CGDataControllerTests */,
+				D38A452419D2120B007AD9DC /* CGDataController */,
+				D38A452F19D2120B007AD9DC /* CGDataControllerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2ED05C3A193538510082B792 /* Resources */ = {
+		D38A452319D2120B007AD9DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ED05C4A193538510082B792 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D38A452E19D2120B007AD9DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		2ED05C5919353A370082B792 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Version 2.0 (updated for Xcode 4, with some fixes)\n# Changes:\n#    - Works with xcode 4, even when running xcode 3 projects (Workarounds for apple bugs)\n#    - Faster / better: only runs lipo once, instead of once per recursion\n#    - Added some debugging statemetns that can be switched on/off by changing the DEBUG_THIS_SCRIPT variable to \"true\"\n#    - Fixed some typos\n#\n# Purpose:\n#   Create a static library for iPhone from within XCode\n#   Because Apple staff DELIBERATELY broke Xcode to make this impossible from the GUI (Xcode 3.2.3 specifically states this in the Release notes!)\n#   ...no, I don't understand why they did this!\n#\n# Author: Adam Martin - http://twitter.com/redglassesapps\n# Based on: original script from Eonil (main changes: Eonil's script WILL NOT WORK in Xcode GUI - it WILL CRASH YOUR COMPUTER)\n#\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\n\n#################[ Tests: helps workaround any future bugs in Xcode ]########\n#\nDEBUG_THIS_SCRIPT=\"false\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\n\n# Next, work out if we're in SIM or DEVICE\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\n# Next decide on workspace build\n# This overwrites the binary in the device folder so that it is automatically found by the compiler\nWORKSPACE=\"true\"\n\necho \"XCode has selected SDK: ${PLATFORM_NAME} with version: ${SDK_VERSION} (although back-targetting: ${IPHONEOS_DEPLOYMENT_TARGET})\"\necho \"...therefore, OTHER_SDK_TO_BUILD = ${OTHER_SDK_TO_BUILD}\"\n#\n#####################[ end of part 1 ]##################\n\n#####################[ part 2 ]##################\n#\n# IF this is the original invocation, invoke WHATEVER other builds are required\n#\n# Xcode is already building ONE target...\n#\n# ...but this is a LIBRARY, so Apple is wrong to set it to build just one.\n# ...we need to build ALL targets\n# ...we MUST NOT re-build the target that is ALREADY being built: Xcode WILL CRASH YOUR COMPUTER if you try this (infinite recursion!)\n#\n#\n# So: build ONLY the missing platforms/configurations.\n\nif [ \"true\" == ${ALREADYINVOKED:-false} ]\nthen\necho \"RECURSION: I am NOT the root invocation, so I'm NOT going to recurse\"\nelse\n# CRITICAL:\n# Prevent infinite recursion (Xcode sucks)\nexport ALREADYINVOKED=\"true\"\necho \"RECURSION: I am the root ... recursing all missing build targets NOW...\"\necho \"RECURSION: ...about to invoke: xcodebuild -configuration \\\"${CONFIGURATION}\\\" -target \\\"${TARGET_NAME}\\\" -sdk \\\"${OTHER_SDK_TO_BUILD}\\\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO\"\nxcodebuild -configuration \"${CONFIGURATION}\" -target \"${TARGET_NAME}\" -sdk \"${OTHER_SDK_TO_BUILD}\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\nACTION=\"build\"\n\n#Merge all platform binaries as a fat binary for each configurations.\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\nLIPOD=$(lipo -info \"${CURRENTCONFIG_DEVICE_DIR}/${EXECUTABLE_NAME}\" | grep 'i386')\nif [[ $LIPOD == *i386* ]]\nthen\n# hack\necho \"hack\"\nelse\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${EXECUTABLE_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${EXECUTABLE_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${EXECUTABLE_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${EXECUTABLE_NAME}\"\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\nif [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\nthen\nmkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\nfi\n\nif [ \"true\" == ${WORKSPACE} ]\nthen\necho \"Copying to device folder for workspace projects\"\nrm -rf \"${CURRENTCONFIG_DEVICE_DIR}\"\nmkdir \"${CURRENTCONFIG_DEVICE_DIR}\"\ncp \"${CREATING_UNIVERSAL_DIR}/${EXECUTABLE_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/\"\nfi\nfi\nfi";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		2ED05C28193538510082B792 /* Sources */ = {
+		D38A452019D2120B007AD9DC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ED05C57193539270082B792 /* NSManagedObject+SYNC.m in Sources */,
-				2ED05C37193538510082B792 /* CGDataController.m in Sources */,
+				D38A454319D21233007AD9DC /* NSManagedObject+SYNC.m in Sources */,
+				D38A454119D21233007AD9DC /* CGDataController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2ED05C38193538510082B792 /* Sources */ = {
+		D38A452C19D2120B007AD9DC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ED05C4C193538510082B792 /* CGDataTests.m in Sources */,
-				2E03C678193697BE005DC84A /* NSSyncTests.m in Sources */,
+				D38A453519D2120B007AD9DC /* CGDataControllerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		2ED05C43193538510082B792 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2ED05C2B193538510082B792 /* CGDataController */;
-			targetProxy = 2ED05C42193538510082B792 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		2ED05C48193538510082B792 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2ED05C49193538510082B792 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
-		2ED05C4D193538510082B792 /* Debug */ = {
+		D38A453619D2120B007AD9DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -301,8 +237,12 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -317,13 +257,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				ONLY_ACTIVE_ARCH = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		2ED05C4E193538510082B792 /* Release */ = {
+		D38A453719D2120B007AD9DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -338,9 +282,13 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -348,104 +296,105 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				ONLY_ACTIVE_ARCH = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
-		2ED05C50193538510082B792 /* Debug */ = {
+		D38A453919D2120B007AD9DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/CGDataController.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "CGDataController/CGDataController-Prefix.pch";
-				OTHER_LDFLAGS = "-ObjC";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = CGDataController/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
-		2ED05C51193538510082B792 /* Release */ = {
+		D38A453A19D2120B007AD9DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/CGDataController.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "CGDataController/CGDataController-Prefix.pch";
-				OTHER_LDFLAGS = "-ObjC";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = CGDataController/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
-		2ED05C53193538510082B792 /* Debug */ = {
+		D38A453C19D2120B007AD9DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "CGDataController/CGDataController-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "CGDataControllerTests/CGDataControllerTests-Info.plist";
+				INFOPLIST_FILE = CGDataControllerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
 		};
-		2ED05C54193538510082B792 /* Release */ = {
+		D38A453D19D2120B007AD9DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "CGDataController/CGDataController-Prefix.pch";
-				INFOPLIST_FILE = "CGDataControllerTests/CGDataControllerTests-Info.plist";
+				INFOPLIST_FILE = CGDataControllerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2ED05C27193538510082B792 /* Build configuration list for PBXProject "CGDataController" */ = {
+		D38A451F19D2120B007AD9DC /* Build configuration list for PBXProject "CGDataController" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2ED05C4D193538510082B792 /* Debug */,
-				2ED05C4E193538510082B792 /* Release */,
+				D38A453619D2120B007AD9DC /* Debug */,
+				D38A453719D2120B007AD9DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2ED05C4F193538510082B792 /* Build configuration list for PBXNativeTarget "CGDataController" */ = {
+		D38A453819D2120B007AD9DC /* Build configuration list for PBXNativeTarget "CGDataController" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2ED05C50193538510082B792 /* Debug */,
-				2ED05C51193538510082B792 /* Release */,
+				D38A453919D2120B007AD9DC /* Debug */,
+				D38A453A19D2120B007AD9DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
-		2ED05C52193538510082B792 /* Build configuration list for PBXNativeTarget "CGDataControllerTests" */ = {
+		D38A453B19D2120B007AD9DC /* Build configuration list for PBXNativeTarget "CGDataControllerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2ED05C53193538510082B792 /* Debug */,
-				2ED05C54193538510082B792 /* Release */,
+				D38A453C19D2120B007AD9DC /* Debug */,
+				D38A453D19D2120B007AD9DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 2ED05C24193538510082B792 /* Project object */;
+	rootObject = D38A451C19D2120B007AD9DC /* Project object */;
 }
