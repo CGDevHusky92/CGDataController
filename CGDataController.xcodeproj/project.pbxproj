@@ -173,7 +173,7 @@
 				TargetAttributes = {
 					D379DCCB1A1366EB00A5E89C = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 7HTZYRZ9FS;
+						DevelopmentTeam = 32475EWY46;
 					};
 					D379DCD61A1366EB00A5E89C = {
 						CreatedOnToolsVersion = 6.1;
@@ -340,7 +340,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "E54BC92A-0C3B-4B36-ACBB-325DB02B497C";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -357,7 +357,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "E54BC92A-0C3B-4B36-ACBB-325DB02B497C";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -378,7 +378,7 @@
 				INFOPLIST_FILE = CGDataControllerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "E54BC92A-0C3B-4B36-ACBB-325DB02B497C";
 			};
 			name = Debug;
 		};
@@ -394,7 +394,7 @@
 				INFOPLIST_FILE = CGDataControllerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "E54BC92A-0C3B-4B36-ACBB-325DB02B497C";
 			};
 			name = Release;
 		};
