@@ -294,19 +294,6 @@ static CGDataController *sharedData;
     [self persistentStoreCoordinator];
 }
 
-#pragma mark - Date Formatter
-
-//- (NSDateFormatter *)dateFormatter
-//{
-//    if (!_formatter) {
-//        _formatter = [[NSDateFormatter alloc] init];
-//        [_formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-//        [_formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-//        [_formatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
-//    }
-//    return _formatter;
-//}
-
 #pragma mark - Generate Status Dictionary
 
 - (NSDictionary *)statusDictionaryForClass:(NSString *)className
