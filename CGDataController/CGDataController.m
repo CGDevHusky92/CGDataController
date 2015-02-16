@@ -165,6 +165,7 @@ static CGDataController *sharedData;
 
 - (void)save
 {
+#warning Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'This NSPersistentStoreCoordinator has no persistent stores.  It cannot perform a save operation.'
     [self.backgroundManagedObjectContext performBlockAndWait:^{
         NSError * error;
         BOOL saved = [self.backgroundManagedObjectContext save:&error];
