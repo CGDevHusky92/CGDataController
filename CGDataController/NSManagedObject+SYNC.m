@@ -6,10 +6,12 @@
 //  Copyright (c) 2014 Revision Works, LLC. All rights reserved.
 //
 
-#import "CGDataController.h"
-#import "NSManagedObject+SYNC.h"
-#import "objc/runtime.h"
 
+#import "NSManagedObject+SYNC.h"
+
+#import "objc/runtime.h"
+#import <CGDataController/CGDataController-Swift.h>
+#import <CGSubExtender/CGSubExtender.h>
 
 @implementation NSManagedObject (SYNC)
 
@@ -52,7 +54,7 @@
             value = [NSNumber numberWithDouble:[value doubleValue]];
             if ([[self valueForKey:attribute] isEqual:value]) continue;
         } else if ((attributeType == NSDateAttributeType) && ([value isKindOfClass:[NSString class]])) {
-            value = [[CGDataController sharedData] dateUsingStringFromAPI:value];
+            value = [[NSDate alloc] initWithString:value];
             if ([[self valueForKey:attribute] isEqualToDate:value]) continue;
         }
         
@@ -75,6 +77,7 @@
             if (![objIds isKindOfClass:[NSNull class]]) {
                 for (NSString *objId in objIds) {
                     NSString * relDestClass = [[description destinationEntity] managedObjectClassName];
+                    
                     NSManagedObject * obj = [[CGDataController sharedData] managedObjectForClass:relDestClass withId:objId];
                     
                     if (obj) {
@@ -100,6 +103,7 @@
             NSString * relId = [dictionary valueForKey:relationship];
             if (![relId isKindOfClass:[NSNull class]] && ![relId isKindOfClass:[NSArray class]]) {
                 NSString * relDestClass = [[description destinationEntity] managedObjectClassName];
+                
                 NSManagedObject * obj = [[CGDataController sharedData] managedObjectForClass:relDestClass withId:[dictionary valueForKey:relationship]];
                 
                 if (obj) {
@@ -152,7 +156,7 @@
         
         if ([object isKindOfClass:[NSDate class]]) {
             
-            [dictionary setObject:[[CGDataController sharedData] dateStringForAPIUsingDate:object] forKey:key];
+            [dictionary setObject:((NSDate *)object).stringFromDate forKey:key];
             
         }
         

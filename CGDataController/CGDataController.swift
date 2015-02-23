@@ -36,7 +36,7 @@ import CoreData
 public let kCGDataControllerFinishedSaveNotification = "kCGDataControllerFinishedSaveNotification"
 public let kCGDataControllerFinishedBackgroundSaveNotification = "kCGDataControllerFinishedBackgroundSaveNotification"
 
-public class CGDataControllerTest: NSObject {
+public class CGDataController: NSObject {
     
     var defaultStoreName: String?
     var dataStores: [String:CGDataStore]
@@ -46,30 +46,30 @@ public class CGDataControllerTest: NSObject {
         super.init()
     }
     
-    public class var sharedDataController: CGDataControllerTest {
+    public class var sharedDataController: CGDataController {
         struct StaticData {
-            static let data : CGDataControllerTest = CGDataControllerTest()
+            static let data : CGDataController = CGDataController()
         }
         return StaticData.data
     }
     
     public class func initSharedDataWithStoreName(storeName: String, makeDefault defaultStore: Bool = false) -> CGDataStore {
-        if let defStore = CGDataControllerTest.sharedDataController.defaultStoreName {
+        if let defStore = CGDataController.sharedDataController.defaultStoreName {
             if defaultStore {
-                CGDataControllerTest.sharedDataController.defaultStoreName = storeName
+                CGDataController.sharedDataController.defaultStoreName = storeName
             }
         } else {
-            CGDataControllerTest.sharedDataController.defaultStoreName = storeName
+            CGDataController.sharedDataController.defaultStoreName = storeName
         }
         
         let dataStore = CGDataStore(sName: storeName)
-        CGDataControllerTest.sharedDataController.dataStores.updateValue(dataStore, forKey: storeName)
+        CGDataController.sharedDataController.dataStores.updateValue(dataStore, forKey: storeName)
         
         return dataStore
     }
     
     public class func sharedData() -> CGDataStore {
-        let dataController = CGDataControllerTest.sharedDataController
+        let dataController = CGDataController.sharedDataController
         if let storeName = dataController.defaultStoreName {
             return self.sharedDataWithName(storeName)
         }
@@ -77,7 +77,7 @@ public class CGDataControllerTest: NSObject {
     }
     
     public class func sharedDataWithName(sName: String) -> CGDataStore {
-        let dataController = CGDataControllerTest.sharedDataController
+        let dataController = CGDataController.sharedDataController
         if let dataStore = dataController.dataStores[sName] {
             return dataStore
         }
@@ -167,7 +167,7 @@ public class CGDataStore: NSObject {
     var _managedObjectModel: NSManagedObjectModel?
     var managedObjectModel: NSManagedObjectModel? {
         if let m = _managedObjectModel { return m }
-        _managedObjectModel = CGDataControllerTest.modifiedObjectModelWithStoreName(storeName)
+        _managedObjectModel = CGDataController.modifiedObjectModelWithStoreName(storeName)
         return _managedObjectModel
     }
     
