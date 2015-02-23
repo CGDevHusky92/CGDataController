@@ -2,7 +2,7 @@
 //  NSManagedObject+SYNC.m
 //  ThisOrThat
 //
-//  Created by Chase Gorectke on 2/23/14.
+//  Created by Chase Gorectke on 2/22/15.
 //  Copyright (c) 2014 Revision Works, LLC. All rights reserved.
 //
 

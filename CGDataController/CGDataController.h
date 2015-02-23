@@ -27,7 +27,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *
- *  Last updated on 5/29/14
+ *  Last updated on 2/22/15
  *
  *  CGDataController is designed to do <#@"description"#>
  */

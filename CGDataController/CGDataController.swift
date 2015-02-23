@@ -27,7 +27,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *
- *  Last updated on 12/9/14
+ *  Last updated on 2/22/15
  */
 
 import UIKit
