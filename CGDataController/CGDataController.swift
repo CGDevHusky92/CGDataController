@@ -178,10 +178,8 @@ public class CGDataStore: NSObject {
             let fileManager = NSFileManager.defaultManager()
             let docPath = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
             let storeURL = docPath.URLByAppendingPathComponent("\(storeName).sqlite")
+            let options = NSDictionary(dictionary: [ NSMigratePersistentStoresAutomaticallyOption : NSNumber(bool: true), NSInferMappingModelAutomaticallyOption : NSNumber(bool: true) ])
             
-            let options = NSDictionary(dictionary: [ NSNumber(bool: true) : NSMigratePersistentStoresAutomaticallyOption,
-                NSNumber(bool: true) : NSInferMappingModelAutomaticallyOption ])
-        
             var error: NSError?
             _persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
             
