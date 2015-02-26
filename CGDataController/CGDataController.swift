@@ -104,6 +104,7 @@ public class CGDataController: NSObject {
                     objId.name = "objectId"
                     objId.attributeType = .StringAttributeType
                     objId.optional = false
+                    objId.defaultValue = NSUUID().UUIDString
                     currentProps.append(objId)
                     
                     let createdAt = NSAttributeDescription()
@@ -122,6 +123,7 @@ public class CGDataController: NSObject {
                     wasDeleted.name = "wasDeleted"
                     wasDeleted.attributeType = .BooleanAttributeType
                     wasDeleted.optional = false
+                    wasDeleted.defaultValue = NSNumber(bool: false)
                     currentProps.append(wasDeleted)
                     
                     let note = NSAttributeDescription()
@@ -134,6 +136,7 @@ public class CGDataController: NSObject {
                     syncStatus.name = "syncStatus"
                     syncStatus.attributeType = .Integer16AttributeType
                     syncStatus.optional = false
+                    syncStatus.defaultValue = NSNumber(integer: 0)
                     currentProps.append(syncStatus)
                     
                     ent.properties = currentProps
@@ -316,11 +319,8 @@ public class CGDataStore: NSObject {
             let objTemp = NSEntityDescription.insertNewObjectForEntityForName(className, inManagedObjectContext: context) as? NSManagedObject
             if let obj = objTemp {
                 let date = NSDate()
-                //    NSDateFormatter *formatter = [self dateFormatter];
                 obj.createdAt = date
                 obj.updatedAt = date
-                obj.objectId = NSUUID().UUIDString
-                obj.syncStatus = NSNumber(int: 0)
                 return obj
             }
         }
