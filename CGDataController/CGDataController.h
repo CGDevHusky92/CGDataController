@@ -38,6 +38,8 @@
 
 #import <CGDataController/NSManagedObject+SYNC.h>
 
+#import "objc/runtime.h"
+
 //! Project version number for CGDataController.
 FOUNDATION_EXPORT double CGDataControllerVersionNumber;
 
