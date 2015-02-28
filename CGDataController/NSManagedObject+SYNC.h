@@ -22,5 +22,6 @@
 - (void)updateDate;
 - (BOOL)updateFromDictionary:(NSDictionary *)dic;
 - (NSDictionary *)dictionaryFromObject;
+- (void)deleteObjectAndRelationships;
 
 @end

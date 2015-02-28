@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Revision Works, LLC. All rights reserved.
 //
 
-///*
+/*
 
 import CoreData
 
@@ -58,6 +58,8 @@ extension NSManagedObject {
         set (d) { objc_setAssociatedObject(self, &ak.updatedAtKey, d as NSDate?, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC)) }
     }
 
+    /* Public Methods */
+    
     func updateFromDictionary(dictionary: [ String : AnyObject? ]) -> Bool {
         return false
     }
@@ -73,6 +75,14 @@ extension NSManagedObject {
     func updateDate() {
         self.updatedAt = NSDate()
     }
+    
+    /* Private Methods */
+    
+//    - (void)updateAttributesFromDictionary:(NSDictionary *)dictionary
+//    - (BOOL)updateRelationshipsFromDictionary:(NSDictionary *)dictionary
+//    - (void)fireSelector:(SEL)select onObject:(id)object withParameter:(id)param
+//    - (NSMutableDictionary *)convertDatesToStrings:(NSMutableDictionary *)dictionary
+//    - (NSDictionary *)relationshipDictionaryFromObject
 }
 
-//*/
+*/

@@ -197,4 +197,9 @@
     [self setUpdatedAt:[NSDate date]];
 }
 
+- (void)deleteObjectAndRelationships
+{
+    [self setWasDeleted:[NSNumber numberWithBool:true]];
+}
+
 @end
