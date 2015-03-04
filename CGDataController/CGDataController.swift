@@ -96,7 +96,7 @@ public class CGDataController: NSObject {
             
             if let modifiableModel = modifiableModelTemp {
                 var entities = [NSEntityDescription]()
-                let modelEntities = modifiableModel.entities as [NSEntityDescription]
+                let modelEntities = modifiableModel.entities as! [NSEntityDescription]
                 for ent in modelEntities {
                     var currentProps = ent.properties
                     
@@ -179,9 +179,12 @@ public class CGDataStore: NSObject {
         if let p = _persistentStoreCoordinator { return p }
         if let model = managedObjectModel {
             let fileManager = NSFileManager.defaultManager()
-            let docPath = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
+            let docPath = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL
             let storeURL = docPath.URLByAppendingPathComponent("\(storeName).sqlite")
-            let options = NSDictionary(dictionary: [ NSMigratePersistentStoresAutomaticallyOption : NSNumber(bool: true), NSInferMappingModelAutomaticallyOption : NSNumber(bool: true) ])
+            
+            let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
+            
+//            let options = NSDictionary(dictionary: [ NSMigratePersistentStoresAutomaticallyOption : NSNumber(bool: true), NSInferMappingModelAutomaticallyOption : NSNumber(bool: true) ])
             
             var error: NSError?
             _persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
@@ -205,7 +208,7 @@ public class CGDataStore: NSObject {
         super.init()
         NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { note in
             if let context = self.masterManagedObjectContext {
-                let notifiedContext = note.object as NSManagedObjectContext
+                let notifiedContext = note.object as! NSManagedObjectContext
                 if notifiedContext != context {
                     context.performBlock({_ in context.mergeChangesFromContextDidSaveNotification(note) })
                 }
@@ -250,7 +253,7 @@ public class CGDataStore: NSObject {
     
     public func deleteStore() {
         let fileManager = NSFileManager.defaultManager()
-        let docPath = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
+        let docPath = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL
         let storeURL = docPath.URLByAppendingPathComponent("\(storeName).sqlite")
         if let storePath = storeURL.path {
             let exists = fileManager.fileExistsAtPath(storePath)
@@ -260,7 +263,7 @@ public class CGDataStore: NSObject {
                 if let err = error { println("Error: \(err.localizedDescription)") } else {
                     if let context = self.masterManagedObjectContext {
                         for ct in context.registeredObjects {
-                            context.deleteObject(ct as NSManagedObject)
+                            context.deleteObject(ct as! NSManagedObject)
                         }
                     }
                 }
@@ -301,7 +304,7 @@ public class CGDataStore: NSObject {
                         ret.setObject(NSNumber(integer: count), forKey: "count")
                         ret.setObject("", forKey: "lastUpdatedAt")
                     } else {
-                        let obj = d[0] as NSManagedObject
+                        let obj = d[0] as! NSManagedObject
                         ret.setObject(NSNumber(integer: count), forKey: "count")
                         ret.setObject(obj.updatedAt, forKey: "lastUpdatedAt")
                     }
