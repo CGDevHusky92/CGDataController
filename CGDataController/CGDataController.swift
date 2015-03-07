@@ -39,12 +39,9 @@ public let kCGDataControllerFinishedBackgroundSaveNotification = "kCGDataControl
 public class CGDataController: NSObject {
     
     var defaultStoreName: String?
-    var dataStores: [String:CGDataStore]
+    var dataStores = [ String : CGDataStore ]()
     
-    override init() {
-        dataStores = [String:CGDataStore]()
-        super.init()
-    }
+    public static var testBundleClass: AnyClass?
     
     public class var sharedDataController: CGDataController {
         struct StaticData {
@@ -69,29 +66,38 @@ public class CGDataController: NSObject {
     }
     
     public class func sharedData() -> CGDataStore {
-        let dataController = CGDataController.sharedDataController
-        if let storeName = dataController.defaultStoreName {
-            return self.sharedDataWithName(storeName)
-        }
+        let d = CGDataController.sharedDataController
+        if let s = d.defaultStoreName { return self.sharedDataWithName(s) }
         assert(false, "You must set a store name by calling +(id)initSharedDataWithStoreName: before making calls to +(id)sharedData")
     }
     
     public class func sharedDataWithName(sName: String) -> CGDataStore {
-        let dataController = CGDataController.sharedDataController
-        if let dataStore = dataController.dataStores[sName] {
-            return dataStore
-        }
+        let d = CGDataController.sharedDataController
+        if let s = d.dataStores[sName] { return s }
         assert(false, "You must set a store name by calling +(id)initSharedDataWithStoreName: before making calls to +(id)sharedDataWithName:")
     }
     
+    private class func getModelStoreURL(storeName: String, withBundle bundle: NSBundle) -> NSURL? {
+        var modelURL = bundle.URLForResource(storeName, withExtension: "mom")
+        if let mURL = modelURL {} else {
+            modelURL = bundle.URLForResource(storeName, withExtension: "momd")
+            if let mURL = modelURL {
+                modelURL = mURL.URLByAppendingPathComponent("\(storeName).mom")
+            }
+        }
+        return modelURL
+    }
+    
     public class func modifiedObjectModelWithStoreName(storeName: String) -> NSManagedObjectModel? {
-        
-        var modelURLTemp = NSBundle.mainBundle().URLForResource(storeName, withExtension: "mom")
-        if let modelURL = modelURLTemp {} else {
-            modelURLTemp = NSBundle.mainBundle().URLForResource(storeName, withExtension: "momd")
+        let bundle: NSBundle
+        if let tBundle: AnyClass = testBundleClass {
+            bundle = NSBundle(forClass: tBundle)
+        } else {
+            bundle = NSBundle.mainBundle()
         }
         
-        if let modelURL = modelURLTemp {
+        let urlTemp = self.getModelStoreURL(storeName, withBundle: bundle)
+        if let modelURL = urlTemp {
             let modifiableModelTemp = NSManagedObjectModel(contentsOfURL: modelURL)
             
             if let modifiableModel = modifiableModelTemp {
@@ -146,11 +152,75 @@ public class CGDataController: NSObject {
                 modifiableModel.entities = entities
                 return modifiableModel
             }
+        } else {
+            assert(false, "The model could not be found. Check to make sure you have the correct model name and extension.")
         }
-        
         return nil
     }
 }
+
+//// MARK: - Core Data stack
+//
+//lazy var applicationDocumentsDirectory: NSURL = {
+//    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.revisionworks.TestData" in the application's documents Application Support directory.
+//    let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+//    return urls[urls.count-1] as! NSURL
+//    }()
+//
+//lazy var managedObjectModel: NSManagedObjectModel = {
+//    // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
+//    let modelURL = NSBundle.mainBundle().URLForResource("TestData", withExtension: "momd")!
+//    return NSManagedObjectModel(contentsOfURL: modelURL)!
+//    }()
+//
+//lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
+//    // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
+//    // Create the coordinator and store
+//    var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
+//    let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("TestData.sqlite")
+//    var error: NSError? = nil
+//    var failureReason = "There was an error creating or loading the application's saved data."
+//    if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+//        coordinator = nil
+//        // Report any error we got.
+//        var dict = [String: AnyObject]()
+//        dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
+//        dict[NSLocalizedFailureReasonErrorKey] = failureReason
+//        dict[NSUnderlyingErrorKey] = error
+//        error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+//        // Replace this with code to handle the error appropriately.
+//        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//        NSLog("Unresolved error \(error), \(error!.userInfo)")
+//        abort()
+//    }
+//    
+//    return coordinator
+//    }()
+//
+//lazy var managedObjectContext: NSManagedObjectContext? = {
+//    // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
+//    let coordinator = self.persistentStoreCoordinator
+//    if coordinator == nil {
+//        return nil
+//    }
+//    var managedObjectContext = NSManagedObjectContext()
+//    managedObjectContext.persistentStoreCoordinator = coordinator
+//    return managedObjectContext
+//    }()
+//
+//// MARK: - Core Data Saving support
+//
+//func saveContext () {
+//    if let moc = self.managedObjectContext {
+//        var error: NSError? = nil
+//        if moc.hasChanges && !moc.save(&error) {
+//            // Replace this implementation with code to handle the error appropriately.
+//            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//            NSLog("Unresolved error \(error), \(error!.userInfo)")
+//            abort()
+//        }
+//    }
+//}
 
 public class CGDataStore: NSObject {
     var _masterManagedObjectContext: NSManagedObjectContext?
@@ -304,7 +374,7 @@ public class CGDataStore: NSObject {
                         ret.setObject(NSNumber(integer: count), forKey: "count")
                         ret.setObject("", forKey: "lastUpdatedAt")
                     } else {
-                        let obj = d[0] as! NSManagedObject
+                        let obj = d[0] as! CGManagedObject
                         ret.setObject(NSNumber(integer: count), forKey: "count")
                         ret.setObject(obj.updatedAt, forKey: "lastUpdatedAt")
                     }
@@ -317,14 +387,16 @@ public class CGDataStore: NSObject {
     
     /* Generate New Object With Class */
     
-    public func newManagedObjectForClass(className: String) -> NSManagedObject? {
+    public func newManagedObjectForClass(className: String) -> CGManagedObject? {
         if let context = backgroundManagedObjectContext {
-            let objTemp = NSEntityDescription.insertNewObjectForEntityForName(className, inManagedObjectContext: context) as? NSManagedObject
+            let objTemp = NSEntityDescription.insertNewObjectForEntityForName(className, inManagedObjectContext: context) as? CGManagedObject
             if let obj = objTemp {
                 let date = NSDate()
                 obj.createdAt = date
                 obj.updatedAt = date
                 return obj
+            } else {
+                println("Error")
             }
         }
         return nil
@@ -339,27 +411,27 @@ public class CGDataStore: NSObject {
     
     /* Single Managed Object Fetch */
     
-    public func managedObjectWithManagedID(objID: NSManagedObjectID) -> NSManagedObject? {
+    public func managedObjectWithManagedID(objID: NSManagedObjectID) -> CGManagedObject? {
         if let context = backgroundManagedObjectContext {
-            return context.objectRegisteredForID(objID)
+            return context.objectRegisteredForID(objID) as? CGManagedObject
         }
         return nil
     }
     
-    public func managedObjectForClass(className: String, withId objId: String) -> NSManagedObject? {
+    public func managedObjectForClass(className: String, withId objId: String) -> CGManagedObject? {
         let objArray = self.managedObjectsForClass(className, sortedByKey: "createdAt", ascending: false, withPredicate: NSPredicate(format: "objectId like %@", objId))
         if let a = objArray {
             if a.count == 0 { return nil } else if a.count > 1 {
                 assert(false, "Error: More than one object has objectId <\(objId)>")
             }
-            return a[0] as? NSManagedObject
+            return a[0] as? CGManagedObject
         }
         return nil
     }
     
-    public func nth(num: Int, managedObjectForClass className: String) -> NSManagedObject? {
+    public func nth(num: Int, managedObjectForClass className: String) -> CGManagedObject? {
         let objArray = self.managedObjectsForClass(className, sortedByKey: "updatedAt", ascending: false)
-        if let a = objArray { if a.count >= num { return a[num - 1] as? NSManagedObject } }
+        if let a = objArray { if a.count >= num { return a[num - 1] as? CGManagedObject } }
         return nil
     }
     
@@ -367,9 +439,9 @@ public class CGDataStore: NSObject {
     
     public func managedObjAsDictionaryWithManagedID(objID: NSManagedObjectID) -> NSDictionary? {
         if let context = backgroundManagedObjectContext {
-            let manObjTemp = context.objectRegisteredForID(objID)
+            let manObjTemp = context.objectRegisteredForID(objID) as? CGManagedObject
             if let manObj = manObjTemp {
-                return self.managedObjAsDictionaryForClass(manObj.entity.managedObjectClassName, withId: manObj.objectId)
+                return self.managedObjAsDictionaryForClass(manObj.entity.managedObjectClassName, withId: manObj.objectId as String)
             }
         }
         return nil

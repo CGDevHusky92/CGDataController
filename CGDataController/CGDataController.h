@@ -36,8 +36,6 @@
 #import <CoreData/CoreData.h>
 #import <Foundation/Foundation.h>
 
-#import <CGDataController/NSManagedObject+SYNC.h>
-
 #import "objc/runtime.h"
 
 //! Project version number for CGDataController.
