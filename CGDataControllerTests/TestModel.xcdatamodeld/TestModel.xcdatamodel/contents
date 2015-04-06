@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7527" systemVersion="14D87h" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7541.6" systemVersion="14D113c" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Candidate" representedClassName="CGDataControllerTests.Candidate" syncable="YES">
         <attribute name="encounter_date" attributeType="Date" syncable="YES"/>
         <attribute name="first_name" attributeType="String" syncable="YES"/>
@@ -13,7 +13,7 @@
         <relationship name="candidateIds" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Candidate" inverseName="recruiterId" inverseEntity="Candidate" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Recruiter" positionX="-54" positionY="-9" width="128" height="90"/>
         <element name="Candidate" positionX="-36" positionY="9" width="128" height="120"/>
+        <element name="Recruiter" positionX="-54" positionY="-9" width="128" height="90"/>
     </elements>
 </model>

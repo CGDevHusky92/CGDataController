@@ -35,13 +35,17 @@ public extension CGManagedObject {
 //        }
 //    }
     
-    
-    
     func updateFromDictionary(dictionary: [ String : AnyObject? ]) -> Bool {
         return false
     }
     
     func dictionaryFromObject() -> [ String : AnyObject? ] {
+        let dic = CGDataController.sharedData().managedObjAsDictionaryWithManagedID(self.objectID)
+        
+        
+        
+        println("\(dic)")
+        
         return [String : AnyObject? ]()
     }
     

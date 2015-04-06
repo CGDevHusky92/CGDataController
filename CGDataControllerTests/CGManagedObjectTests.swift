@@ -59,5 +59,27 @@ class CGManagedObjectTests: XCTestCase {
         XCTAssertEqual(wasDeleted, rec.wasDeleted, "wasDeleted exists and is persisting.")
         XCTAssertEqual(syncStatus, rec.syncStatus, "syncStatus exists and is persisting.")
     }
+    
+    func testSubclassDictionary() {
+        let newRecruiter = CGDataController.sharedData().newManagedObjectForClass("Recruiter") as! Recruiter
+        
+        let recId = newRecruiter.objectId
+        let createdAt = newRecruiter.createdAt
+        let updatedAt = newRecruiter.updatedAt
+        let note = newRecruiter.note
+        let wasDeleted = newRecruiter.wasDeleted
+        let syncStatus = newRecruiter.syncStatus
+        
+        newRecruiter.username = "crgorect"
+        
+        CGDataController.sharedData().save()
+        
+        let rec = CGDataController.sharedData().managedObjectForClass("Recruiter", withId: recId) as! Recruiter
+        
+        rec.dictionaryFromObject()
+        
+        XCTAssert(true, "Printing dictionary")
+        
+    }
 
 }

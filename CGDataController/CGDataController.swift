@@ -223,6 +223,7 @@ public class CGDataController: NSObject {
 //}
 
 public class CGDataStore: NSObject {
+    
     var _masterManagedObjectContext: NSManagedObjectContext?
     var masterManagedObjectContext: NSManagedObjectContext? {
         if let m = _masterManagedObjectContext { return m }
@@ -253,8 +254,6 @@ public class CGDataStore: NSObject {
             let storeURL = docPath.URLByAppendingPathComponent("\(storeName).sqlite")
             
             let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
-            
-//            let options = NSDictionary(dictionary: [ NSMigratePersistentStoresAutomaticallyOption : NSNumber(bool: true), NSInferMappingModelAutomaticallyOption : NSNumber(bool: true) ])
             
             var error: NSError?
             _persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
@@ -412,9 +411,7 @@ public class CGDataStore: NSObject {
     /* Single Managed Object Fetch */
     
     public func managedObjectWithManagedID(objID: NSManagedObjectID) -> CGManagedObject? {
-        if let context = backgroundManagedObjectContext {
-            return context.objectRegisteredForID(objID) as? CGManagedObject
-        }
+        if let c = backgroundManagedObjectContext { return c.objectRegisteredForID(objID) as? CGManagedObject }
         return nil
     }
     
@@ -441,7 +438,11 @@ public class CGDataStore: NSObject {
         if let context = backgroundManagedObjectContext {
             let manObjTemp = context.objectRegisteredForID(objID) as? CGManagedObject
             if let manObj = manObjTemp {
-                return self.managedObjAsDictionaryForClass(manObj.entity.managedObjectClassName, withId: manObj.objectId as String)
+                if let name = manObj.entity.name {
+                    return self.managedObjAsDictionaryForClass(name, withId: manObj.objectId as String)
+                } else {
+                    return self.managedObjAsDictionaryForClass(manObj.entity.managedObjectClassName, withId: manObj.objectId as String)
+                }
             }
         }
         return nil
